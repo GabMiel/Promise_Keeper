@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Promise Keeper</string>
+    <string name="greeting_format">Good morning, %1$s!</string>
+    <string name="subtitle_home">You\'ve got promises to keep.</string>
+    <string name="today_summary">Today\'s Summary</string>
+    <string name="kept">Kept</string>
+    <string name="broken">Broken</string>
+    <string name="pending">Pending</string>
+    <string name="today_promises">Today\'s Promises</string>
+    <string name="add_promise">+ Add Promise</string>
+    <string name="menu_desc">Menu</string>
+    <string name="percent_format">%1$d%%</string>
+
+    <!-- Navigation -->
+    <string name="nav_today">Today</string>
+    <string name="nav_promises">Promises</string>
+    <string name="nav_history">History</string>
+    <string name="nav_stats">Stats</string>
+    <string name="nav_profile">Profile</string>
+</resources>

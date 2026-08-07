@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingVertical="12dp">
+
+    <ImageView
+        android:id="@+id/ivStatusIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@android:drawable/checkbox_off_background"
+        app:tint="@color/status_pending"
+        tools:src="@android:drawable/presence_online" />
+
+    <TextView
+        android:id="@+id/tvPromiseDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_weight="1"
+        android:textColor="@color/text_dark"
+        android:textSize="14sp"
+        tools:text="Study Data Structures" />
+
+    <TextView
+        android:id="@+id/tvStatusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pending"
+        android:textColor="@color/status_pending"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        tools:text="Pending" />
+
+</LinearLayout>

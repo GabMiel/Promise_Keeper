@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "61807841621",
+    "project_id": "promise-keeper-f5ca9",
+    "storage_bucket": "promise-keeper-f5ca9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61807841621:android:91eafac2168fc614abdfdc",
+        "android_client_info": {
+          "package_name": "com.example.promisekeeper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "61807841621-mkhol7uli74kr94u3krhjpjcip12n7gl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.promisekeeper",
+            "certificate_hash": "8a65aeb8a1ba529902777a271bea9db40a2cce28"
+          }
+        },
+        {
+          "client_id": "61807841621-41pgqu3lo1dtkvsvcvlsubd4mduh4sfv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYe0v_Nw9qDAz2PK2aI-rTuyf0JDJReRI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "61807841621-41pgqu3lo1dtkvsvcvlsubd4mduh4sfv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
