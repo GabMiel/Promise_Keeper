@@ -1,6 +1,5 @@
 package com.example.promisekeeper
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionManager
-import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -42,7 +42,7 @@ class TodayFragment : Fragment() {
         setupGreeting(view)
         setupCalendar(view)
         setupRecyclerView(view)
-        setupAddButton(view)
+        setupButtons(view)
         observePromises(view)
     }
 
@@ -95,10 +95,29 @@ class TodayFragment : Fragment() {
         rvPromises.adapter = adapter
     }
 
-    private fun setupAddButton(view: View) {
-        view.findViewById<TextView>(R.id.btnAddPromise).setOnClickListener {
-            startActivity(Intent(requireContext(), AddPromiseActivity::class.java))
+    private fun setupButtons(view: View) {
+        view.findViewById<ExtendedFloatingActionButton>(R.id.btnAddPromise).setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment, AddPromiseFragment())
+                .addToBackStack(null)
+                .commit()
         }
+
+        view.findViewById<TextView>(R.id.btnReviewDay).setOnClickListener {
+            openReviewFragment()
+        }
+
+        view.findViewById<MaterialButton>(R.id.btnCompleteDay).setOnClickListener {
+            openReviewFragment()
+        }
+    }
+
+    private fun openReviewFragment() {
+        val reviewFragment = ReviewFragment.newInstance(selectedDate.time)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment, reviewFragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun observePromises(view: View) {

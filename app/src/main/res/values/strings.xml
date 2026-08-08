@@ -17,4 +17,60 @@
     <string name="nav_history">History</string>
     <string name="nav_stats">Stats</string>
     <string name="nav_profile">Profile</string>
+
+    <!-- Profile & Stats -->
+    <string name="profile_total">Total</string>
+    <string name="profile_success">Success</string>
+    <string name="profile_streak">Streak</string>
+    <string name="account_section">Account</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_privacy">Privacy Policy</string>
+    <string name="app_section">App</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="about_app">About Promise Keeper</string>
+    <string name="sign_out_confirm">Are you sure you want to sign out?</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- History -->
+    <string name="history_title">History</string>
+    <string name="filter_all">All</string>
+    <string name="no_history_found">No history found</string>
+
+    <!-- End of Day Review -->
+    <string name="end_of_day_review">End of Day Review</string>
+    <string name="review_success_title">You did well today!</string>
+    <string name="review_success_subtitle">Let\'s review your promises.</string>
+    <string name="review_reflect_title">Let\'s reflect on today</string>
+    <string name="review_reflect_subtitle">It\'s okay, let\'s learn from these.</string>
+    <string name="kept_count">Kept (%1$d)</string>
+    <string name="broken_count">Broken (%1$d)</string>
+    <string name="pending_count">Pending (%1$d)</string>
+    <string name="why_broken">Why did you break this promise?</string>
+    <string name="reason_optional">Reason (optional)</string>
+    <string name="how_improve">How can you improve tomorrow?</string>
+    <string name="save_review">Save Review</string>
+    <string name="review_day_link">Review Day ></string>
+    <string name="hint_reason">Explain why...</string>
+    <string name="hint_improvement">I will...</string>
+    <string name="complete_day_review">Complete Day Review</string>
+
+    <!-- Failure Tags -->
+    <string name="tag_forgot">Forgot</string>
+    <string name="tag_too_busy">Too busy</string>
+    <string name="tag_no_motivation">No motivation</string>
+    <string name="tag_tired">Tired</string>
+    <string name="tag_felt_lazy">Felt lazy</string>
+    <string name="tag_other">Other</string>
+
+    <!-- Stats -->
+    <string name="stats_title">Stats</string>
+    <string name="this_week">This Week</string>
+    <string name="promise_success_rate">Promise Success Rate</string>
+    <string name="success_rate_summary">You kept %1$d out of %2$d promises.</string>
+    <string name="current_streak">Current Streak</string>
+    <string name="longest_streak">Longest Streak</string>
+    <string name="days">%1$d days</string>
+    <string name="most_common_reason">Most Common Reason</string>
+    <string name="insight_title">Insight</string>
+    <string name="insight_friday_message">You tend to break promises on Fridays.</string>
 </resources>

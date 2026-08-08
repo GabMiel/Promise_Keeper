@@ -1,5 +1,6 @@
 package com.example.promisekeeper
 
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,7 @@ class CalendarAdapter(
     class CalendarViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvDayName: TextView = view.findViewById(R.id.tvDayName)
         val tvDayNumber: TextView = view.findViewById(R.id.tvDayNumber)
-        val cvDateCircle: MaterialCardView = view.findViewById(R.id.cvDateCircle)
+        val rootCard: MaterialCardView = view.findViewById(R.id.rootCard)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
@@ -32,15 +33,20 @@ class CalendarAdapter(
 
         val context = holder.itemView.context
         if (day.isSelected) {
-            holder.cvDateCircle.setCardBackgroundColor(ContextCompat.getColor(context, R.color.accent_red))
+            holder.rootCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.accent_red))
+            holder.rootCard.strokeWidth = 0
+            holder.tvDayName.setTextColor(ContextCompat.getColor(context, R.color.white))
             holder.tvDayNumber.setTextColor(ContextCompat.getColor(context, R.color.white))
         } else {
-            holder.cvDateCircle.setCardBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
+            holder.rootCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.white))
+            val strokePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, context.resources.displayMetrics).toInt()
+            holder.rootCard.strokeWidth = strokePx
+            holder.rootCard.strokeColor = ContextCompat.getColor(context, R.color.light_gray)
+            holder.tvDayName.setTextColor(ContextCompat.getColor(context, R.color.text_gray))
             holder.tvDayNumber.setTextColor(ContextCompat.getColor(context, R.color.text_dark))
         }
 
         holder.itemView.setOnClickListener {
-            // Update selection logic
             days.forEach { it.isSelected = false }
             day.isSelected = true
             notifyDataSetChanged()

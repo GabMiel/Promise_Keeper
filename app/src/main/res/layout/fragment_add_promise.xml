@@ -5,16 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_soft"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:clickable="true"
+    android:focusable="true">
 
     <ImageView
         android:id="@+id/btnBack"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:src="@android:drawable/ic_menu_revert"
+        android:src="@drawable/ic_back_arrow"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/text_dark" />
+        app:tint="@color/text_dark"
+        android:contentDescription="@string/menu_desc" />
 
     <TextView
         android:id="@+id/tvTitle"
@@ -33,10 +36,11 @@
         android:id="@+id/btnDone"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:src="@android:drawable/checkbox_on_background"
+        android:src="@drawable/ic_check"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/text_dark" />
+        app:tint="@color/text_dark"
+        android:contentDescription="@string/menu_desc" />
 
     <TextView
         android:id="@+id/labelPromise"
@@ -58,6 +62,9 @@
         android:hint="e.g. I will code for at least 1 hour"
         android:padding="16dp"
         android:textSize="14sp"
+        android:maxLength="100"
+        android:importantForAutofill="no"
+        android:inputType="textCapSentences"
         app:layout_constraintTop_toBottomOf="@id/labelPromise" />
 
     <TextView
@@ -90,7 +97,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                app:cardBackgroundColor="@color/bg_soft"
+                app:cardBackgroundColor="@color/accent_red_light"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp">
                 <ImageView
@@ -98,7 +105,8 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_study"
-                    app:tint="@color/accent_red" />
+                    app:tint="@color/accent_red"
+                    android:contentDescription="Study" />
             </com.google.android.material.card.MaterialCardView>
             <TextView
                 android:layout_width="wrap_content"
@@ -127,7 +135,8 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_health"
-                    app:tint="@color/text_gray" />
+                    app:tint="@color/text_gray"
+                    android:contentDescription="Health" />
             </com.google.android.material.card.MaterialCardView>
             <TextView
                 android:layout_width="wrap_content"
@@ -156,7 +165,8 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_personal"
-                    app:tint="@color/text_gray" />
+                    app:tint="@color/text_gray"
+                    android:contentDescription="Personal" />
             </com.google.android.material.card.MaterialCardView>
             <TextView
                 android:layout_width="wrap_content"
@@ -185,7 +195,8 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_other"
-                    app:tint="@color/text_gray" />
+                    app:tint="@color/text_gray"
+                    android:contentDescription="Other" />
             </com.google.android.material.card.MaterialCardView>
             <TextView
                 android:layout_width="wrap_content"
@@ -212,6 +223,8 @@
         android:id="@+id/switchRemind"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:thumbTint="@color/white"
+        app:trackTint="@color/switch_track_selector"
         app:layout_constraintBottom_toBottomOf="@id/labelRemind"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/labelRemind" />
@@ -229,7 +242,8 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@android:drawable/ic_menu_recent_history"
-            app:tint="@color/text_dark" />
+            app:tint="@color/text_dark"
+            android:contentDescription="Time" />
         <TextView
             android:id="@+id/tvTime"
             android:layout_width="wrap_content"
@@ -262,6 +276,9 @@
         android:hint="Why is this important?"
         android:padding="16dp"
         android:textSize="14sp"
+        android:maxLength="500"
+        android:importantForAutofill="no"
+        android:inputType="textMultiLine"
         app:layout_constraintBottom_toTopOf="@id/btnSave"
         app:layout_constraintTop_toBottomOf="@id/labelNotes" />
 
@@ -274,5 +291,16 @@
         android:textAllCaps="false"
         app:cornerRadius="12dp"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:indeterminateTint="@color/accent_red"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

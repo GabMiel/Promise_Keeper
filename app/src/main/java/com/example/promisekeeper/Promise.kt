@@ -9,6 +9,7 @@ data class Promise(
     val notes: String? = null,
     val timestamp: Long = System.currentTimeMillis(),
     val status: PromiseStatus = PromiseStatus.PENDING,
+    val failureTag: String? = null,
     val reasonForFailure: String? = null,
     val improvementPlan: String? = null
 )

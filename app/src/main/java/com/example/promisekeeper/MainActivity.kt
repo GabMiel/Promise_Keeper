@@ -88,9 +88,9 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_today -> replaceFragment(TodayFragment(), "Today")
                 R.id.nav_promises -> replaceFragment(PlaceholderFragment.newInstance("Promises"), "Promises")
-                R.id.nav_history -> replaceFragment(PlaceholderFragment.newInstance("History"), "History")
-                R.id.nav_stats -> replaceFragment(PlaceholderFragment.newInstance("Stats"), "Stats")
-                R.id.nav_profile -> replaceFragment(PlaceholderFragment.newInstance("Profile"), "Profile")
+                R.id.nav_history -> replaceFragment(HistoryFragment(), "History")
+                R.id.nav_stats -> replaceFragment(StatsFragment(), "Stats")
+                R.id.nav_profile -> replaceFragment(ProfileFragment(), "Profile")
             }
             true
         }

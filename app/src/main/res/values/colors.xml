@@ -4,6 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="bg_soft">#FFFBF9</color>
     <color name="accent_red">#F27878</color>
+    <color name="accent_red_light">#FFEAEA</color>
     <color name="text_dark">#333333</color>
     <color name="text_gray">#757575</color>
     <color name="status_kept">#4CAF50</color>
