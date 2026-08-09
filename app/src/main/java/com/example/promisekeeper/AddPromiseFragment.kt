@@ -35,6 +35,17 @@ class AddPromiseFragment : Fragment() {
     private val auth = FirebaseAuth.getInstance()
     private var selectedCategory = "Study"
     private var reminderTime: String? = null
+    private var editingPromiseId: String? = null
+
+    companion object {
+        fun newInstance(promiseId: String? = null): AddPromiseFragment {
+            val fragment = AddPromiseFragment()
+            val args = Bundle()
+            args.putString("promise_id", promiseId)
+            fragment.arguments = args
+            return fragment
+        }
+    }
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -50,6 +61,8 @@ class AddPromiseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        
+        editingPromiseId = arguments?.getString("promise_id")
 
         view.findViewById<ImageView>(R.id.btnBack).setOnClickListener {
             parentFragmentManager.popBackStack()
@@ -66,6 +79,30 @@ class AddPromiseFragment : Fragment() {
         etPromise.requestFocus()
         
         requestNotificationPermission()
+
+        if (editingPromiseId != null) {
+            loadPromiseData(view, editingPromiseId!!)
+        }
+    }
+
+    private fun loadPromiseData(view: View, id: String) {
+        db.collection("promises").document(id).get()
+            .addOnSuccessListener { doc ->
+                val promise = doc.toObject(Promise::class.java)
+                promise?.let {
+                    view.findViewById<EditText>(R.id.etPromise).setText(it.description)
+                    view.findViewById<EditText>(R.id.etNotes).setText(it.notes)
+                    selectedCategory = it.category
+                    reminderTime = it.reminderTime
+                    
+                    if (reminderTime != null) {
+                        view.findViewById<TextView>(R.id.tvTime).text = reminderTime
+                        view.findViewById<SwitchMaterial>(R.id.switchRemind).isChecked = true
+                        updateReminderUI(view, true)
+                    }
+                    updateCategoryUI(view)
+                }
+            }
     }
 
     private fun requestNotificationPermission() {
@@ -189,8 +226,9 @@ class AddPromiseFragment : Fragment() {
 
         val finalReminderTime = if (isReminderOn) (reminderTime ?: "8:00 PM") else null
 
+        val id = editingPromiseId ?: db.collection("promises").document().id
         val promise = Promise(
-            id = db.collection("promises").document().id,
+            id = id,
             userId = auth.currentUser?.uid ?: "",
             description = description,
             category = selectedCategory,

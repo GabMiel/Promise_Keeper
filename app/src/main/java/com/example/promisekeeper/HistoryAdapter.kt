@@ -3,6 +3,7 @@ package com.example.promisekeeper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,7 @@ class HistoryAdapter(private val onItemClick: (HistoryItem.Day) -> Unit) :
         return when (getItem(position)) {
             is HistoryItem.Header -> TYPE_HEADER
             is HistoryItem.Day -> TYPE_DAY
+            else -> throw IllegalArgumentException("Invalid view type")
         }
     }
 
@@ -34,7 +36,6 @@ class HistoryAdapter(private val onItemClick: (HistoryItem.Day) -> Unit) :
             is HeaderViewHolder -> holder.bind(item as HistoryItem.Header)
             is DayViewHolder -> {
                 val dayItem = item as HistoryItem.Day
-                // Logic to determine background: check neighbors to see if it's start/middle/end of a group
                 val isFirstInGroup = position == 0 || getItem(position - 1) is HistoryItem.Header
                 val isLastInGroup = position == itemCount - 1 || getItem(position + 1) is HistoryItem.Header
                 holder.bind(dayItem, isFirstInGroup, isLastInGroup)
@@ -53,14 +54,27 @@ class HistoryAdapter(private val onItemClick: (HistoryItem.Day) -> Unit) :
         private val onClick: (HistoryItem.Day) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(day: HistoryItem.Day, isFirst: Boolean, isLast: Boolean) {
+            val context = itemView.context
             binding.tvDate.text = day.date
-            binding.tvPercentage.text = "${day.percentage}%"
-            binding.tvKeptCount.text = day.kept.toString()
-            binding.tvBrokenCount.text = day.broken.toString()
-            binding.tvPendingCount.text = day.pending.toString()
+            binding.tvPercentage.text = context.getString(R.string.percent_format, day.percentage)
+            binding.tvKeptCount.text = context.getString(R.string.stat_format_kept, day.kept)
+            binding.tvBrokenCount.text = context.getString(R.string.stat_format_broken, day.broken)
+            binding.tvPendingCount.text = context.getString(R.string.stat_format_pending, day.pending)
+
+            // Reflection Snippet handling
+            if (!day.reflectionSnippet.isNullOrBlank()) {
+                binding.tvReflectionSnippet.visibility = View.VISIBLE
+                binding.tvReflectionSnippet.text = "Insight: ${day.reflectionSnippet}"
+                binding.tvReviewLink.text = context.getString(R.string.view_reflection)
+                binding.tvReviewLink.setTextColor(ContextCompat.getColor(context, R.color.status_kept))
+            } else {
+                binding.tvReflectionSnippet.visibility = View.GONE
+                binding.tvReviewLink.text = context.getString(R.string.review_day_link)
+                binding.tvReviewLink.setTextColor(ContextCompat.getColor(context, R.color.accent_red))
+            }
 
             val backgroundRes = when {
-                isFirst && isLast -> R.drawable.bg_input_field // Fully rounded
+                isFirst && isLast -> R.drawable.bg_input_field
                 isFirst -> R.drawable.bg_history_item_top
                 isLast -> R.drawable.bg_history_item_bottom
                 else -> R.drawable.bg_history_item_middle
@@ -77,7 +91,7 @@ class HistoryAdapter(private val onItemClick: (HistoryItem.Day) -> Unit) :
             return if (oldItem is HistoryItem.Header && newItem is HistoryItem.Header) {
                 oldItem.month == newItem.month
             } else if (oldItem is HistoryItem.Day && newItem is HistoryItem.Day) {
-                oldItem.date == newItem.date
+                oldItem.timestamp == newItem.timestamp
             } else false
         }
         override fun areContentsTheSame(oldItem: HistoryItem, newItem: HistoryItem): Boolean = oldItem == newItem

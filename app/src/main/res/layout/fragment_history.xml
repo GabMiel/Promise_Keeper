@@ -52,6 +52,19 @@
                 app:chipStrokeWidth="0dp" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/chipReviews"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_reviews"
+                android:textColor="@color/text_dark"
+                android:textSize="14sp"
+                app:chipBackgroundColor="@color/white"
+                app:chipCornerRadius="16dp"
+                app:chipStrokeColor="@color/light_gray"
+                app:chipStrokeWidth="1dp" />
+
+            <com.google.android.material.chip.Chip
                 android:id="@+id/chipKept"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
@@ -89,6 +102,7 @@
                 app:chipCornerRadius="16dp"
                 app:chipStrokeColor="@color/light_gray"
                 app:chipStrokeWidth="1dp" />
+
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 

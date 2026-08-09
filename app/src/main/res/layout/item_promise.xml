@@ -2,6 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardPromise"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
@@ -16,65 +17,139 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cvIcon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:cardBackgroundColor="@color/bg_soft"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
+        <!-- Selection Checkbox -->
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+        <!-- Status Icon Container -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvStatusIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:cardBackgroundColor="@color/status_kept_light"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:layout_constraintStart_toEndOf="@id/checkbox"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_goneMarginStart="0dp">
 
             <ImageView
                 android:id="@+id/ivStatusIcon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_promise_pending"
-                app:tint="@color/status_pending"
-                tools:src="@drawable/ic_health" />
+                android:src="@drawable/ic_check"
+                app:tint="@color/status_kept"
+                tools:src="@drawable/ic_check"
+                android:contentDescription="@string/pending" />
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Description -->
         <TextView
-            android:id="@+id/tvPromiseDescription"
+            android:id="@+id/tvDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:textColor="@color/text_dark"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/tvStatusText"
-            app:layout_constraintEnd_toStartOf="@+id/ivChevron"
-            app:layout_constraintStart_toEndOf="@id/cvIcon"
+            app:layout_constraintEnd_toStartOf="@+id/cvCategoryTag"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@id/cvStatusIcon"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed"
-            tools:text="Study Data Structures" />
+            app:layout_constraintWidth_default="wrap"
+            tools:text="Code for at least 1 hour" />
 
-        <TextView
-            android:id="@+id/tvStatusText"
+        <!-- Category Tag -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvCategoryTag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            app:cardBackgroundColor="@color/status_kept_light"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/tvDescription"
+            app:layout_constraintEnd_toStartOf="@+id/ivChevron"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/tvDescription"
+            app:layout_constraintTop_toTopOf="@id/tvDescription">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp">
+
+                <ImageView
+                    android:id="@+id/ivCategorySmallIcon"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:src="@drawable/ic_study"
+                    app:tint="@color/status_kept"
+                    android:contentDescription="@string/category_study" />
+
+                <TextView
+                    android:id="@+id/tvCategorySmallName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="@string/category_study"
+                    android:textColor="@color/status_kept"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Date and Time -->
+        <TextView
+            android:id="@+id/tvDateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:textColor="@color/text_gray"
             android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tvPromiseDescription"
-            app:layout_constraintTop_toBottomOf="@id/tvPromiseDescription"
-            tools:text="Pending" />
+            app:layout_constraintStart_toStartOf="@+id/tvDescription"
+            app:layout_constraintTop_toBottomOf="@id/tvDescription"
+            tools:text="May 21, 2024  •  8:00 PM" />
+
+        <!-- Broken Reason (Visible only if broken) -->
+        <TextView
+            android:id="@+id/tvReason"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/text_gray"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@+id/ivChevron"
+            app:layout_constraintStart_toStartOf="@+id/tvDescription"
+            app:layout_constraintTop_toBottomOf="@id/tvDateTime"
+            tools:text="Reason: Slept late, Watched YouTube until midnight."
+            tools:visibility="visible" />
 
         <ImageView
             android:id="@+id/ivChevron"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:rotation="180"
             android:src="@drawable/ic_back_arrow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/light_gray" />
+            app:tint="@color/light_gray"
+            android:contentDescription="@string/menu_desc" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

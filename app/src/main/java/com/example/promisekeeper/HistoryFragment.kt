@@ -24,6 +24,18 @@ class HistoryFragment : Fragment() {
     
     private var allPromises = listOf<Promise>()
 
+    companion object {
+        private const val ARG_INITIAL_STATUS = "initial_status"
+
+        fun newInstance(status: String? = null): HistoryFragment {
+            val fragment = HistoryFragment()
+            val args = Bundle()
+            args.putString(ARG_INITIAL_STATUS, status)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHistoryBinding.inflate(inflater, container, false)
         return binding.root
@@ -31,14 +43,34 @@ class HistoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        
+        setupInitialFilter()
         setupRecyclerView()
         setupFilters()
         fetchHistory()
     }
 
+    private fun setupInitialFilter() {
+        val initialStatus = arguments?.getString(ARG_INITIAL_STATUS)
+        if (initialStatus != null) {
+            when (initialStatus.uppercase()) {
+                PromiseStatus.KEPT.name -> binding.chipKept.isChecked = true
+                PromiseStatus.BROKEN.name -> binding.chipBroken.isChecked = true
+                PromiseStatus.PENDING.name -> binding.chipPending.isChecked = true
+                "REFLECTIONS", "REVIEWS" -> binding.chipReviews.isChecked = true
+                else -> binding.chipAll.isChecked = true
+            }
+        }
+    }
+
     private fun setupRecyclerView() {
         adapter = HistoryAdapter { dayItem ->
-            // TODO: Navigate to day detail view
+            // Navigate to Review view for that day to view the reflection
+            val reviewFragment = ReviewFragment.newInstance(dayItem.timestamp)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment, reviewFragment)
+                .addToBackStack(null)
+                .commit()
         }
         binding.rvHistory.layoutManager = LinearLayoutManager(requireContext())
         binding.rvHistory.adapter = adapter
@@ -53,14 +85,15 @@ class HistoryFragment : Fragment() {
     private fun fetchHistory() {
         val userId = auth.currentUser?.uid ?: return
         
-        db.collection("promises")
-            .whereEqualTo("userId", userId)
+        db.collection("users").document(userId).collection("promises")
             .orderBy("timestamp", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, e ->
                 if (e != null) return@addSnapshotListener
                 
                 if (snapshot != null) {
-                    allPromises = snapshot.toObjects(Promise::class.java)
+                    allPromises = snapshot.toObjects(Promise::class.java).mapIndexed { index, promise ->
+                        promise.copy(id = snapshot.documents[index].id)
+                    }
                     processAndDisplayData()
                 }
             }
@@ -71,8 +104,6 @@ class HistoryFragment : Fragment() {
         val sdfDate = SimpleDateFormat("EEE, MMM d", Locale.getDefault())
         val sdfGroupKey = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
-        // Group promises by day. SortedMap is not strictly needed if Firestore returns ordered data,
-        // but groupBy preserves order of keys as they appear in the source list.
         val groupedByDay = allPromises.groupBy { 
             sdfGroupKey.format(Date(it.timestamp)) 
         }
@@ -90,16 +121,22 @@ class HistoryFragment : Fragment() {
             val pending = promises.count { it.status == PromiseStatus.PENDING }
             val total = promises.size
             
-            // Calculate percentage with rounding
+            // Extract the first meaningful reflection found for the day
+            val reflectionSnippet = promises
+                .firstOrNull { !it.improvementPlan.isNullOrBlank() }
+                ?.improvementPlan
+            
+            val hasReflections = reflectionSnippet != null
+            
             val percent = if (total > 0) {
                 ((kept.toDouble() / total) * 100).roundToInt()
             } else 0
 
-            // Apply filters: Show the day if it has at least one promise matching the filter type
             val matchesFilter = when (selectedFilterId) {
                 R.id.chipKept -> kept > 0
                 R.id.chipBroken -> broken > 0
                 R.id.chipPending -> pending > 0
+                R.id.chipReviews -> hasReflections
                 else -> true
             }
 
@@ -108,13 +145,24 @@ class HistoryFragment : Fragment() {
                     historyItems.add(HistoryItem.Header(monthHeader))
                     lastMonthHeader = monthHeader
                 }
+                
+                // Calculate start of day timestamp for navigation consistency
+                val cal = Calendar.getInstance().apply { time = date }
+                cal.set(Calendar.HOUR_OF_DAY, 0)
+                cal.set(Calendar.MINUTE, 0)
+                cal.set(Calendar.SECOND, 0)
+                cal.set(Calendar.MILLISECOND, 0)
+                val dayStartTimestamp = cal.timeInMillis
+
                 historyItems.add(HistoryItem.Day(
                     date = sdfDate.format(date),
                     percentage = percent,
                     kept = kept,
                     broken = broken,
                     pending = pending,
-                    timestamp = date.time
+                    timestamp = dayStartTimestamp,
+                    hasReflection = hasReflections,
+                    reflectionSnippet = reflectionSnippet
                 ))
             }
         }
@@ -127,16 +175,4 @@ class HistoryFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-}
-
-sealed class HistoryItem {
-    data class Header(val month: String) : HistoryItem()
-    data class Day(
-        val date: String,
-        val percentage: Int,
-        val kept: Int,
-        val broken: Int,
-        val pending: Int,
-        val timestamp: Long
-    ) : HistoryItem()
 }

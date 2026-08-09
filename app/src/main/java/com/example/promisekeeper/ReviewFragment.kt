@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
@@ -19,6 +20,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -27,6 +29,7 @@ import java.util.Locale
 class ReviewFragment : Fragment() {
     private val db = Firebase.firestore
     private val auth = FirebaseAuth.getInstance()
+    private val reviewRepository = ReviewRepository()
     private var selectedDate: Date = Calendar.getInstance().time
     
     private lateinit var tabLayout: TabLayout
@@ -46,11 +49,17 @@ class ReviewFragment : Fragment() {
     private lateinit var tvHeaderTitle: TextView
     private lateinit var tvHeaderSubtitle: TextView
     private lateinit var feedbackContainer: View
+
+    private lateinit var layoutPromisePager: View
+    private lateinit var btnPrevPromise: ImageView
+    private lateinit var btnNextPromise: ImageView
+    private lateinit var tvPromiseProgress: TextView
     
     private var brokenPromises = mutableListOf<Promise>()
     private var keptPromises = mutableListOf<Promise>()
     private var pendingPromises = mutableListOf<Promise>()
-    private var currentlyReviewing: Promise? = null
+    
+    private var brokenIndex = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_review, container, false)
@@ -71,7 +80,21 @@ class ReviewFragment : Fragment() {
         }
         
         btnSaveReview.setOnClickListener {
-            saveReview()
+            saveCurrentReflection()
+        }
+
+        btnNextPromise.setOnClickListener {
+            if (brokenIndex < brokenPromises.size - 1) {
+                brokenIndex++
+                updateUIForSelectedTab()
+            }
+        }
+
+        btnPrevPromise.setOnClickListener {
+            if (brokenIndex > 0) {
+                brokenIndex--
+                updateUIForSelectedTab()
+            }
         }
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -101,6 +124,11 @@ class ReviewFragment : Fragment() {
         tvHeaderTitle = view.findViewById(R.id.tvHeaderTitle)
         tvHeaderSubtitle = view.findViewById(R.id.tvHeaderSubtitle)
         feedbackContainer = view.findViewById(R.id.feedbackContainer)
+
+        layoutPromisePager = view.findViewById(R.id.layoutPromisePager)
+        btnPrevPromise = view.findViewById(R.id.btnPrevPromise)
+        btnNextPromise = view.findViewById(R.id.btnNextPromise)
+        tvPromiseProgress = view.findViewById(R.id.tvPromiseProgress)
     }
 
     private fun setupDate() {
@@ -120,13 +148,14 @@ class ReviewFragment : Fragment() {
         val startOfDay = calendar.timeInMillis
         val endOfDay = startOfDay + 86400000
 
-        db.collection("promises")
-            .whereEqualTo("userId", userId)
+        db.collection("users").document(userId).collection("promises")
             .whereGreaterThanOrEqualTo("timestamp", startOfDay)
             .whereLessThan("timestamp", endOfDay)
             .get()
             .addOnSuccessListener { snapshot ->
-                val promises = snapshot.toObjects(Promise::class.java)
+                val promises = snapshot.toObjects(Promise::class.java).mapIndexed { index, promise ->
+                    promise.copy(id = snapshot.documents[index].id)
+                }
                 
                 keptPromises = promises.filter { it.status == PromiseStatus.KEPT }.toMutableList()
                 brokenPromises = promises.filter { it.status == PromiseStatus.BROKEN }.toMutableList()
@@ -135,7 +164,6 @@ class ReviewFragment : Fragment() {
                 updateTabCounts()
                 updateHeaderCard()
                 
-                // Select default tab: Broken if failures exist, otherwise Kept, otherwise Pending
                 if (brokenPromises.isNotEmpty()) {
                     tabLayout.getTabAt(1)?.select()
                 } else if (keptPromises.isNotEmpty()) {
@@ -155,26 +183,22 @@ class ReviewFragment : Fragment() {
 
     private fun updateHeaderCard() {
         if (brokenPromises.isNotEmpty()) {
-            // Dynamic Reflection Header for Broken Promises
             tvHeaderTitle.text = getString(R.string.review_reflect_title)
             tvHeaderSubtitle.text = getString(R.string.review_reflect_subtitle)
             ivHeaderIcon.setImageResource(R.drawable.ic_promise_broken)
             ivHeaderIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.status_broken))
             cvHeaderIcon.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.accent_red_light))
         } else {
-            // Standard Success Header
             tvHeaderTitle.text = getString(R.string.review_success_title)
             tvHeaderSubtitle.text = getString(R.string.review_success_subtitle)
             ivHeaderIcon.setImageResource(R.drawable.ic_check)
             ivHeaderIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.status_kept))
-            cvHeaderIcon.setCardBackgroundColor(Color.parseColor("#E8F5E9")) // Light Green
+            cvHeaderIcon.setCardBackgroundColor(Color.parseColor("#E8F5E9"))
         }
     }
 
     private fun updateUIForSelectedTab() {
         val selectedTab = tabLayout.selectedTabPosition
-        
-        // Update Tab Colors dynamically based on status
         val statusColor = when (selectedTab) {
             0 -> ContextCompat.getColor(requireContext(), R.color.status_kept)
             1 -> ContextCompat.getColor(requireContext(), R.color.status_broken)
@@ -183,49 +207,53 @@ class ReviewFragment : Fragment() {
         tabLayout.setSelectedTabIndicatorColor(statusColor)
         tabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.text_gray), statusColor)
 
-        val promise = when (selectedTab) {
-            0 -> keptPromises.firstOrNull()
-            1 -> brokenPromises.firstOrNull()
-            else -> pendingPromises.firstOrNull()
-        }
-        
-        currentlyReviewing = promise
-        
-        if (promise != null) {
+        if (selectedTab == 1 && brokenPromises.isNotEmpty()) {
+            layoutPromisePager.visibility = View.VISIBLE
+            val promise = brokenPromises[brokenIndex]
             tvPromiseDescription.text = promise.description
+            tvStatusLabel.text = getString(R.string.broken)
+            ivStatusIcon.setImageResource(R.drawable.ic_promise_broken)
+            ivStatusIcon.setColorFilter(statusColor)
+            tvStatusLabel.setTextColor(statusColor)
+            tvPromiseProgress.text = getString(R.string.reflection_progress, brokenIndex + 1, brokenPromises.size)
             
-            when (promise.status) {
-                PromiseStatus.KEPT -> {
-                    tvStatusLabel.text = getString(R.string.kept)
-                    ivStatusIcon.setImageResource(R.drawable.ic_promise_kept)
-                    ivStatusIcon.setColorFilter(statusColor)
-                    tvStatusLabel.setTextColor(statusColor)
-                    feedbackContainer.visibility = View.GONE
-                }
-                PromiseStatus.BROKEN -> {
-                    tvStatusLabel.text = getString(R.string.broken)
-                    ivStatusIcon.setImageResource(R.drawable.ic_promise_broken)
-                    ivStatusIcon.setColorFilter(statusColor)
-                    tvStatusLabel.setTextColor(statusColor)
-                    showFeedbackForm(promise)
-                }
-                PromiseStatus.PENDING -> {
-                    tvStatusLabel.text = getString(R.string.pending)
-                    ivStatusIcon.setImageResource(R.drawable.ic_promise_pending)
-                    ivStatusIcon.setColorFilter(statusColor)
-                    tvStatusLabel.setTextColor(statusColor)
-                    feedbackContainer.visibility = View.GONE
-                }
-            }
+            showFeedbackForm(promise)
+            
+            btnSaveReview.text = if (brokenIndex == brokenPromises.size - 1) getString(R.string.finish_review) else getString(R.string.next_reflection)
         } else {
-            tvPromiseDescription.text = "No promises in this category"
-            tvStatusLabel.text = ""
+            layoutPromisePager.visibility = View.GONE
+            val promise = when (selectedTab) {
+                0 -> keptPromises.firstOrNull()
+                else -> pendingPromises.firstOrNull()
+            }
+            
+            if (promise != null) {
+                tvPromiseDescription.text = promise.description
+                when (promise.status) {
+                    PromiseStatus.KEPT -> {
+                        tvStatusLabel.text = getString(R.string.kept)
+                        ivStatusIcon.setImageResource(R.drawable.ic_promise_kept)
+                        ivStatusIcon.setColorFilter(statusColor)
+                    }
+                    else -> {
+                        tvStatusLabel.text = getString(R.string.pending)
+                        ivStatusIcon.setImageResource(R.drawable.ic_promise_pending)
+                        ivStatusIcon.setColorFilter(statusColor)
+                    }
+                }
+                tvStatusLabel.setTextColor(statusColor)
+            } else {
+                tvPromiseDescription.text = getString(R.string.no_promises_category)
+                tvStatusLabel.text = ""
+            }
             feedbackContainer.visibility = View.GONE
+            btnSaveReview.visibility = View.GONE
         }
     }
 
     private fun showFeedbackForm(promise: Promise) {
         feedbackContainer.visibility = View.VISIBLE
+        btnSaveReview.visibility = View.VISIBLE
         etReason.setText(promise.reasonForFailure)
         etImprovement.setText(promise.improvementPlan)
         
@@ -241,26 +269,58 @@ class ReviewFragment : Fragment() {
         }
     }
 
-    private fun saveReview() {
-        val promise = currentlyReviewing ?: return
-        if (promise.status != PromiseStatus.BROKEN) return
-
+    private fun saveCurrentReflection() {
+        if (tabLayout.selectedTabPosition != 1 || brokenPromises.isEmpty()) return
+        
+        val promise = brokenPromises[brokenIndex]
         val selectedChipId = cgFailureTags.checkedChipId
         val failureTag = if (selectedChipId != View.NO_ID) {
             view?.findViewById<Chip>(selectedChipId)?.text.toString()
         } else null
         
+        val userId = auth.currentUser?.uid ?: return
         val updatedPromise = promise.copy(
             failureTag = failureTag,
             reasonForFailure = etReason.text.toString(),
             improvementPlan = etImprovement.text.toString()
         )
 
-        db.collection("promises").document(promise.id).set(updatedPromise)
+        db.collection("users").document(userId).collection("promises").document(promise.id).set(updatedPromise)
             .addOnSuccessListener {
-                Toast.makeText(context, "Review saved!", Toast.LENGTH_SHORT).show()
-                parentFragmentManager.popBackStack()
+                brokenPromises[brokenIndex] = updatedPromise
+                if (brokenIndex < brokenPromises.size - 1) {
+                    brokenIndex++
+                    updateUIForSelectedTab()
+                } else {
+                    finalizeDayReview()
+                }
             }
+    }
+
+    private fun finalizeDayReview() {
+        val userId = auth.currentUser?.uid ?: return
+        
+        // Finalize the day by creating a Review document
+        val calendar = Calendar.getInstance()
+        calendar.time = selectedDate
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val dayTimestamp = calendar.timeInMillis
+
+        val review = Review(
+            userId = userId,
+            timestamp = dayTimestamp,
+            completedAt = System.currentTimeMillis(),
+            summary = "Reflected on ${brokenPromises.size} broken promises."
+        )
+
+        lifecycleScope.launch {
+            reviewRepository.saveReview(review)
+            Toast.makeText(context, "Reflection completed!", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.popBackStack()
+        }
     }
 
     companion object {

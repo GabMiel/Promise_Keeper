@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             signIn()
         } else {
             if (savedInstanceState == null) {
-                replaceFragment(TodayFragment(), "Today")
+                replaceFragment(HomeFragment(), "Home")
             }
         }
     }
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    replaceFragment(TodayFragment(), "Today")
+                    replaceFragment(HomeFragment(), "Home")
                 } else {
                     Toast.makeText(this, "Authentication Failed.", Toast.LENGTH_SHORT).show()
                 }
@@ -86,8 +86,8 @@ class MainActivity : AppCompatActivity() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigation)
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_today -> replaceFragment(TodayFragment(), "Today")
-                R.id.nav_promises -> replaceFragment(PlaceholderFragment.newInstance("Promises"), "Promises")
+                R.id.nav_today -> replaceFragment(HomeFragment(), "Home")
+                R.id.nav_promises -> replaceFragment(PromisesFragment(), "Promises")
                 R.id.nav_history -> replaceFragment(HistoryFragment(), "History")
                 R.id.nav_stats -> replaceFragment(StatsFragment(), "Stats")
                 R.id.nav_profile -> replaceFragment(ProfileFragment(), "Profile")

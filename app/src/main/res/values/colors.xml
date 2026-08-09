@@ -8,7 +8,10 @@
     <color name="text_dark">#333333</color>
     <color name="text_gray">#757575</color>
     <color name="status_kept">#4CAF50</color>
+    <color name="status_kept_light">#E8F5E9</color>
     <color name="status_broken">#E57373</color>
+    <color name="status_broken_light">#FFEBEE</color>
     <color name="status_pending">#FFB74D</color>
+    <color name="status_pending_light">#FFF3E0</color>
     <color name="light_gray">#EEEEEE</color>
 </resources>

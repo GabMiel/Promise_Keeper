@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintBottom_toTopOf="@id/btnCompleteDay"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
@@ -65,6 +65,56 @@
                     app:tint="@color/text_dark" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- Pending Reflection Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardPendingReview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/accent_red_light"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/accent_red"
+                app:strokeWidth="1dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_promise_broken"
+                        app:tint="@color/accent_red"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:id="@+id/tvPendingReviewText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:text="@string/pending_review_msg"
+                        android:textColor="@color/accent_red"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/ivArrow"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:rotation="180"
+                        android:src="@drawable/ic_back_arrow"
+                        app:tint="@color/accent_red"
+                        android:contentDescription="@null" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- Refined Calendar Selector -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvCalendar"
@@ -93,33 +143,13 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/today_summary"
-                            android:textColor="@color/text_dark"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/btnReviewDay"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:text="@string/review_day_link"
-                            android:textColor="@color/accent_red"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/today_summary"
+                        android:textColor="@color/text_dark"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -202,20 +232,7 @@
         app:backgroundTint="@color/accent_red"
         app:icon="@android:drawable/ic_input_add"
         app:iconTint="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/btnCompleteDay"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnCompleteDay"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_margin="24dp"
-        android:text="@string/complete_day_review"
-        android:textAllCaps="false"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:backgroundTint="@color/accent_red"
-        app:cornerRadius="20dp"
-        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,10 +18,36 @@
     <string name="nav_stats">Stats</string>
     <string name="nav_profile">Profile</string>
 
-    <!-- Profile & Stats -->
+    <!-- Promises Screen -->
+    <string name="promises_title">Promises</string>
+    <string name="kept_promises_header">KEPT PROMISES</string>
+    <string name="broken_promises_header">BROKEN PROMISES</string>
+    <string name="pending_promises_header">PENDING PROMISES</string>
+    <string name="count_suffix">%1$d promises</string>
+    <string name="view_all_kept">View all kept promises</string>
+    <string name="view_all_broken">View all broken promises</string>
+    <string name="view_all_pending">View all pending promises</string>
+    <string name="search_desc">Search</string>
+    <string name="filter_desc">Filter</string>
+    <string name="reason_prefix">Reason: %1$s</string>
+    <string name="no_promises_yet">No promises yet. Tap + to start!</string>
+    <string name="no_category_promises">No %1$s promises found</string>
+    <string name="no_search_results">No results for \"%1$s\"</string>
+    <string name="selected_count">%1$d selected</string>
+
+    <!-- Categories -->
+    <string name="all_categories">All Categories</string>
+    <string name="category_study">Study</string>
+    <string name="category_health">Health</string>
+    <string name="category_personal">Personal</string>
+
+    <!-- Profile & Settings -->
     <string name="profile_total">Total</string>
     <string name="profile_success">Success</string>
     <string name="profile_streak">Streak</string>
+    <string name="reminders_section">Reminders</string>
+    <string name="review_reminder_title">Daily Review Nudge</string>
+    <string name="default_review_time">11:00 PM</string>
     <string name="account_section">Account</string>
     <string name="settings_notifications">Notifications</string>
     <string name="settings_privacy">Privacy Policy</string>
@@ -34,10 +60,16 @@
     <!-- History -->
     <string name="history_title">History</string>
     <string name="filter_all">All</string>
+    <string name="filter_reviews">Reviews</string>
     <string name="no_history_found">No history found</string>
+    <string name="view_reflection">View Review</string>
+    <string name="stat_format_kept">%1$d Kept</string>
+    <string name="stat_format_broken">%1$d Broken</string>
+    <string name="stat_format_pending">%1$d Pending</string>
+    <string name="reflection_prefix">Insight: %1$s</string>
 
     <!-- End of Day Review -->
-    <string name="end_of_day_review">End of Day Review</string>
+    <string name="end_of_day_review">Daily Review</string>
     <string name="review_success_title">You did well today!</string>
     <string name="review_success_subtitle">Let\'s review your promises.</string>
     <string name="review_reflect_title">Let\'s reflect on today</string>
@@ -53,6 +85,16 @@
     <string name="hint_reason">Explain why...</string>
     <string name="hint_improvement">I will...</string>
     <string name="complete_day_review">Complete Day Review</string>
+    <string name="pending_review_msg">You have a pending review from yesterday.</string>
+    <string name="pending_review_multi_msg">You have %1$d pending reviews.</string>
+    <string name="next_reflection">Next Item</string>
+    <string name="finish_review">Finish Review</string>
+    <string name="reflection_progress">%1$d of %2$d</string>
+    <string name="no_promises_category">No promises in this category</string>
+
+    <!-- Notifications -->
+    <string name="notification_review_title">Finish your Daily Review</string>
+    <string name="notification_review_text">You have pending reviews. Take a moment to grow!</string>
 
     <!-- Failure Tags -->
     <string name="tag_forgot">Forgot</string>
