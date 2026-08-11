@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_soft">
@@ -14,16 +15,17 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
+            android:id="@+id/mainContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="24dp">
 
-            <!-- Premium Header -->
+            <!-- Header -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp">
+                android:layout_marginTop="16dp">
 
                 <TextView
                     android:id="@+id/tvGreeting"
@@ -34,7 +36,7 @@
                     android:textColor="@color/text_dark"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toStartOf="@+id/ivNotifications"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Good morning, Gab!" />
@@ -51,80 +53,70 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvGreeting" />
 
-                <ImageView
-                    android:id="@+id/ivNotifications"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/menu_desc"
-                    android:padding="8dp"
-                    android:src="@android:drawable/ic_popup_reminder"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/text_dark" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Pending Reflection Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardPendingReview"
+            <!-- Weekly Calendar Header -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:visibility="gone"
-                app:cardBackgroundColor="@color/accent_red_light"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/accent_red"
-                app:strokeWidth="1dp"
-                tools:visibility="visible">
+                android:layout_marginTop="32dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tvCurrentWeek"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
+                    android:layout_weight="1"
+                    android:textColor="@color/text_dark"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:text="June 10 - 16, 2024" />
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_promise_broken"
-                        app:tint="@color/accent_red"
-                        android:contentDescription="@null" />
+                <ImageView
+                    android:id="@+id/ivPrevWeek"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_back_arrow"
+                    app:tint="@color/text_dark" />
 
-                    <TextView
-                        android:id="@+id/tvPendingReviewText"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_weight="1"
-                        android:text="@string/pending_review_msg"
-                        android:textColor="@color/accent_red"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                <ImageView
+                    android:id="@+id/ivNextWeek"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="8dp"
+                    android:padding="4dp"
+                    android:rotation="180"
+                    android:src="@drawable/ic_back_arrow"
+                    app:tint="@color/text_dark" />
+            </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/ivArrow"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:rotation="180"
-                        android:src="@drawable/ic_back_arrow"
-                        app:tint="@color/accent_red"
-                        android:contentDescription="@null" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            <!-- Weekday Labels -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="S" android:gravity="center" android:textSize="12sp" android:textColor="@color/text_gray" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="M" android:gravity="center" android:textSize="12sp" android:textColor="@color/text_gray" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="T" android:gravity="center" android:textSize="12sp" android:textColor="@color/text_gray" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="W" android:gravity="center" android:textSize="12sp" android:textColor="@color/text_gray" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="T" android:gravity="center" android:textSize="12sp" android:textColor="@color/text_gray" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="F" android:gravity="center" android:textSize="12sp" android:textColor="@color/text_gray" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="S" android:gravity="center" android:textSize="12sp" android:textColor="@color/text_gray" />
+            </LinearLayout>
 
-            <!-- Refined Calendar Selector -->
+            <!-- Weekly Grid -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvCalendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:clipToPadding="false"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/view_day_item" />
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/view_day_item"
+                tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                tools:spanCount="7" />
 
             <!-- Summary Card -->
             <com.google.android.material.card.MaterialCardView
@@ -144,12 +136,13 @@
                     android:padding="20dp">
 
                     <TextView
+                        android:id="@+id/tvSummaryTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/today_summary"
                         android:textColor="@color/text_dark"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="Today's Summary" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -209,6 +202,41 @@
                 android:textColor="@color/text_dark"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <!-- Skeleton Loading State -->
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <include layout="@layout/item_promise_skeleton" />
+                    <include layout="@layout/item_promise_skeleton" />
+                    <include layout="@layout/item_promise_skeleton" />
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <!-- Empty State Container -->
+            <TextView
+                android:id="@+id/emptyStateContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:alpha="0.6"
+                app:drawableTopCompat="@drawable/ic_promise_pending"
+                android:drawablePadding="16dp"
+                android:gravity="center"
+                android:text="@string/no_promises_today"
+                android:textColor="@color/text_gray"
+                android:textSize="14sp"
+                android:visibility="gone"
+                app:drawableTint="@color/text_gray"
+                tools:visibility="visible" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPromises"

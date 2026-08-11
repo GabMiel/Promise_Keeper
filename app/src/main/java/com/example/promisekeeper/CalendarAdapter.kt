@@ -1,23 +1,25 @@
 package com.example.promisekeeper
 
 import android.util.TypedValue
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 
 class CalendarAdapter(
-    private var days: List<CalendarDay>,
     private val onDateSelected: (CalendarDay) -> Unit
-) : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
+) : ListAdapter<CalendarDay, CalendarAdapter.CalendarViewHolder>(CalendarDiffCallback()) {
 
     class CalendarViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvDayName: TextView = view.findViewById(R.id.tvDayName)
         val tvDayNumber: TextView = view.findViewById(R.id.tvDayNumber)
         val rootCard: MaterialCardView = view.findViewById(R.id.rootCard)
+        val viewTodayIndicator: View = view.findViewById(R.id.viewTodayIndicator)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
@@ -27,37 +29,72 @@ class CalendarAdapter(
     }
 
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
-        val day = days[position]
-        holder.tvDayName.text = day.dayName
+        val day = getItem(position)
         holder.tvDayNumber.text = day.dayNumber
 
         val context = holder.itemView.context
-        if (day.isSelected) {
-            holder.rootCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.accent_red))
-            holder.rootCard.strokeWidth = 0
-            holder.tvDayName.setTextColor(ContextCompat.getColor(context, R.color.white))
-            holder.tvDayNumber.setTextColor(ContextCompat.getColor(context, R.color.white))
-        } else {
-            holder.rootCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.white))
-            val strokePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, context.resources.displayMetrics).toInt()
-            holder.rootCard.strokeWidth = strokePx
-            holder.rootCard.strokeColor = ContextCompat.getColor(context, R.color.light_gray)
-            holder.tvDayName.setTextColor(ContextCompat.getColor(context, R.color.text_gray))
-            holder.tvDayNumber.setTextColor(ContextCompat.getColor(context, R.color.text_dark))
+        
+        // Show indicator if it's today
+        holder.viewTodayIndicator.visibility = if (day.isToday) View.VISIBLE else View.INVISIBLE
+        
+        when {
+            day.isSelected -> {
+                // Selected State (Primary Highlight)
+                holder.rootCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.accent_red))
+                holder.rootCard.strokeWidth = 0
+                holder.tvDayNumber.setTextColor(ContextCompat.getColor(context, R.color.white))
+                holder.viewTodayIndicator.setBackgroundResource(R.drawable.dot_indicator_white)
+            }
+            day.status == DayStatus.ALL_KEPT -> {
+                // Performance: All Kept (Subtle Green)
+                holder.rootCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.status_kept_light))
+                holder.rootCard.strokeColor = ContextCompat.getColor(context, R.color.status_kept)
+                holder.rootCard.strokeWidth = dpToPx(1, context)
+                holder.tvDayNumber.setTextColor(ContextCompat.getColor(context, R.color.status_kept))
+                holder.viewTodayIndicator.setBackgroundResource(R.drawable.dot_indicator)
+            }
+            day.status == DayStatus.HAS_BROKEN -> {
+                // Performance: Has Broken/Expired (Subtle Red)
+                holder.rootCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.status_broken_light))
+                holder.rootCard.strokeColor = ContextCompat.getColor(context, R.color.status_broken)
+                holder.rootCard.strokeWidth = dpToPx(1, context)
+                holder.tvDayNumber.setTextColor(ContextCompat.getColor(context, R.color.status_broken))
+                holder.viewTodayIndicator.setBackgroundResource(R.drawable.dot_indicator)
+            }
+            else -> {
+                // Neutral State: No promises or mixed pending
+                holder.rootCard.setCardBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
+                holder.rootCard.strokeColor = ContextCompat.getColor(context, R.color.light_gray)
+                holder.rootCard.strokeWidth = dpToPx(1, context)
+                holder.tvDayNumber.setTextColor(ContextCompat.getColor(context, R.color.text_dark))
+                holder.viewTodayIndicator.setBackgroundResource(R.drawable.dot_indicator)
+            }
         }
 
         holder.itemView.setOnClickListener {
-            days.forEach { it.isSelected = false }
-            day.isSelected = true
-            notifyDataSetChanged()
-            onDateSelected(day)
+            if (!day.isSelected) {
+                holder.itemView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                onDateSelected(day)
+            }
         }
     }
 
-    override fun getItemCount() = days.size
+    private fun dpToPx(dp: Int, context: android.content.Context): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            context.resources.displayMetrics
+        ).toInt()
+    }
 
-    fun updateDays(newDays: List<CalendarDay>) {
-        days = newDays
-        notifyDataSetChanged()
+    class CalendarDiffCallback : DiffUtil.ItemCallback<CalendarDay>() {
+        override fun areItemsTheSame(oldItem: CalendarDay, newItem: CalendarDay): Boolean {
+            // Compare date and status to ensure colors update correctly without full reload flicker
+            return oldItem.date == newItem.date
+        }
+
+        override fun areContentsTheSame(oldItem: CalendarDay, newItem: CalendarDay): Boolean {
+            return oldItem == newItem
+        }
     }
 }

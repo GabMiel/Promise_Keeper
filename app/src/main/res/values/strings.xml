@@ -3,16 +3,17 @@
     <string name="greeting_format">Good morning, %1$s!</string>
     <string name="subtitle_home">You\'ve got promises to keep.</string>
     <string name="today_summary">Today\'s Summary</string>
+    <string name="summary_for_date">Summary for %1$s</string>
     <string name="kept">Kept</string>
     <string name="broken">Broken</string>
     <string name="pending">Pending</string>
     <string name="today_promises">Today\'s Promises</string>
-    <string name="add_promise">+ Add Promise</string>
+    <string name="add_promise">Add Promise</string>
     <string name="menu_desc">Menu</string>
     <string name="percent_format">%1$d%%</string>
 
     <!-- Navigation -->
-    <string name="nav_today">Today</string>
+    <string name="nav_home">Home</string>
     <string name="nav_promises">Promises</string>
     <string name="nav_history">History</string>
     <string name="nav_stats">Stats</string>
@@ -30,10 +31,19 @@
     <string name="search_desc">Search</string>
     <string name="filter_desc">Filter</string>
     <string name="reason_prefix">Reason: %1$s</string>
-    <string name="no_promises_yet">No promises yet. Tap + to start!</string>
+    <string name="no_promises_yet">No promises yet. Tap to start!</string>
+    <string name="no_kept_promises">No kept promises yet today. Let\'s keep some!</string>
+    <string name="no_broken_promises">No broken promises! Keep up the great work.</string>
+    <string name="no_pending_promises">All promises handled! You\'re caught up.</string>
+    <string name="no_promises_today">No promises for this day. Tap to add one!</string>
     <string name="no_category_promises">No %1$s promises found</string>
     <string name="no_search_results">No results for \"%1$s\"</string>
+    <string name="search_promises_hint">Search promises...</string>
+    <string name="search_history_hint">Search history...</string>
+    <string name="no_search_history_results">No history matches \"%1$s\"</string>
     <string name="selected_count">%1$d selected</string>
+    <string name="delete_confirmation_msg">Are you sure you want to delete this promise? This action cannot be undone.</string>
+    <string name="reminder_today_format">%1$s Today</string>
 
     <!-- Categories -->
     <string name="all_categories">All Categories</string>
@@ -68,7 +78,13 @@
     <string name="stat_format_pending">%1$d Pending</string>
     <string name="reflection_prefix">Insight: %1$s</string>
 
-    <!-- End of Day Review -->
+    <!-- Day Summary / Review -->
+    <string name="day_summary_title">Day Summary</string>
+    <string name="no_promises_category_kept">No kept promises today</string>
+    <string name="no_promises_category_broken">No broken promises today</string>
+    <string name="no_promises_category_pending">No pending promises today</string>
+
+    <!-- End of Day Review (Legacy) -->
     <string name="end_of_day_review">Daily Review</string>
     <string name="review_success_title">You did well today!</string>
     <string name="review_success_subtitle">Let\'s review your promises.</string>
@@ -102,6 +118,7 @@
     <string name="tag_no_motivation">No motivation</string>
     <string name="tag_tired">Tired</string>
     <string name="tag_felt_lazy">Felt lazy</string>
+    <string name="tag_stressed">Stressed</string>
     <string name="tag_other">Other</string>
 
     <!-- Stats -->
@@ -115,4 +132,22 @@
     <string name="most_common_reason">Most Common Reason</string>
     <string name="insight_title">Insight</string>
     <string name="insight_friday_message">You tend to break promises on Fridays.</string>
+
+    <!-- New Stats Insights -->
+    <string name="insight_default">Keep up the good work!</string>
+    <string name="insight_perfect">You\'re doing great! Keep keeping those promises.</string>
+    <string name="insight_worst_day">You tend to break promises on %1$s. Try to be extra mindful then!</string>
+    <string name="insight_worst_category">You struggle most with %1$s promises. Maybe set smaller goals?</string>
+    <string name="insight_consistent">Stay consistent! Small steps lead to big changes.</string>
+
+    <!-- Status Update Dialog -->
+    <string name="edit">Edit</string>
+    <string name="update_status_title">Update Status</string>
+    <string name="update_status_subtitle">Mark your progress for today</string>
+    <string name="kept_it">I kept it</string>
+    <string name="broke_it">I broke it</string>
+    <string name="still_pending">Still pending</string>
+    <string name="confirm">Confirm</string>
+    <string name="reason_hint">Why was it broken? (Optional)</string>
+    <string name="delete_promise">Delete Promise</string>
 </resources>

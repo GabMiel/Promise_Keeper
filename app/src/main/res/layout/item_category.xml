@@ -38,17 +38,5 @@
             android:textStyle="bold"
             tools:text="Study" />
 
-        <ImageView
-            android:id="@+id/ivDropdown"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginStart="4dp"
-            android:rotation="-90"
-            android:src="@drawable/ic_back_arrow"
-            android:visibility="gone"
-            app:tint="@color/text_gray"
-            tools:visibility="visible"
-            android:contentDescription="Dropdown" />
-
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

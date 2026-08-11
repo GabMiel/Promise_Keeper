@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 
 class PromiseAdapter(
-    private val onPromiseClick: (Promise) -> Unit,
-    private val onPromiseLongClick: (Promise) -> Unit,
-    private val onFooterClick: (PromiseStatus) -> Unit,
-    private val onSelectionChanged: (Int) -> Unit
+    private val onPromiseClick: ((Promise, View) -> Unit)? = null,
+    private val onPromiseLongClick: ((Promise, View) -> Unit)? = null,
+    private val onFooterClick: ((PromiseStatus) -> Unit)? = null,
+    private val onSelectionChanged: ((Int) -> Unit)? = null
 ) : ListAdapter<Any, RecyclerView.ViewHolder>(AnyDiffCallback()) {
 
     private var isSelectionMode = false
@@ -52,7 +52,7 @@ class PromiseAdapter(
             notifyItemChanged(index)
         }
         
-        onSelectionChanged(selectedIds.size)
+        onSelectionChanged?.invoke(selectedIds.size)
     }
 
     fun getSelectedPromises(): List<Promise> {
@@ -102,7 +102,8 @@ class PromiseAdapter(
         private val tvAction: TextView = view.findViewById(R.id.tvFooterAction)
         fun bind(footer: FooterItem) {
             tvAction.text = footer.actionText
-            itemView.setOnClickListener { onFooterClick(footer.status) }
+            itemView.setOnClickListener { onFooterClick?.invoke(footer.status) }
+            itemView.isClickable = onFooterClick != null
         }
     }
 
@@ -133,7 +134,7 @@ class PromiseAdapter(
 
             checkBox.visibility = if (isSelectionMode) View.VISIBLE else View.GONE
             checkBox.isChecked = selectedIds.contains(promise.id)
-            ivChevron.visibility = if (isSelectionMode) View.GONE else View.VISIBLE
+            ivChevron.visibility = if (isSelectionMode || onPromiseClick == null) View.GONE else View.VISIBLE
 
             applyStatusColors(promise)
 
@@ -141,13 +142,15 @@ class PromiseAdapter(
                 if (isSelectionMode) {
                     toggleSelection(promise.id)
                 } else {
-                    onPromiseClick(promise)
+                    onPromiseClick?.invoke(promise, itemView)
                 }
             }
             
+            itemView.isClickable = isSelectionMode || onPromiseClick != null
+            
             itemView.setOnLongClickListener {
-                if (!isSelectionMode) {
-                    onPromiseLongClick(promise)
+                if (!isSelectionMode && onPromiseLongClick != null) {
+                    onPromiseLongClick.invoke(promise, itemView)
                     true
                 } else false
             }

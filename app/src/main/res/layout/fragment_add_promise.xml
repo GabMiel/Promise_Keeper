@@ -97,7 +97,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                app:cardBackgroundColor="@color/accent_red_light"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp">
                 <ImageView
@@ -105,7 +105,7 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_study"
-                    app:tint="@color/accent_red"
+                    app:tint="@color/text_gray"
                     android:contentDescription="Study" />
             </com.google.android.material.card.MaterialCardView>
             <TextView
@@ -114,7 +114,7 @@
                 android:layout_marginTop="4dp"
                 android:text="Study"
                 android:textSize="12sp"
-                android:textColor="@color/accent_red" />
+                android:textColor="@color/text_gray" />
         </LinearLayout>
 
         <LinearLayout

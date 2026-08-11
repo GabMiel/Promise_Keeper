@@ -22,12 +22,10 @@ class CategoryAdapter(
         val card: MaterialCardView = view.findViewById(R.id.cardCategory)
         val icon: ImageView = view.findViewById(R.id.ivCategoryIcon)
         val name: TextView = view.findViewById(R.id.tvCategoryName)
-        val dropdown: ImageView = view.findViewById(R.id.ivDropdown)
 
         fun bind(category: Category, position: Int) {
             name.text = category.name
             icon.setImageResource(category.iconRes)
-            dropdown.visibility = if (category.hasDropdown) View.VISIBLE else View.GONE
 
             val isSelected = position == selectedPosition
             val context = itemView.context
@@ -37,13 +35,11 @@ class CategoryAdapter(
                 card.strokeColor = ContextCompat.getColor(context, R.color.accent_red)
                 name.setTextColor(ContextCompat.getColor(context, R.color.accent_red))
                 icon.setColorFilter(ContextCompat.getColor(context, R.color.accent_red))
-                dropdown.setColorFilter(ContextCompat.getColor(context, R.color.accent_red))
             } else {
                 card.setCardBackgroundColor(ContextCompat.getColor(context, R.color.white))
                 card.strokeColor = ContextCompat.getColor(context, R.color.light_gray)
                 name.setTextColor(ContextCompat.getColor(context, R.color.text_gray))
                 icon.setColorFilter(ContextCompat.getColor(context, R.color.text_gray))
-                dropdown.setColorFilter(ContextCompat.getColor(context, R.color.text_gray))
             }
 
             itemView.setOnClickListener {

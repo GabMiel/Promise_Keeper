@@ -2,9 +2,16 @@ package com.example.promisekeeper
 
 import java.util.Date
 
+enum class DayStatus {
+    NONE,       // No promises
+    ALL_KEPT,   // All promises kept (Green)
+    HAS_BROKEN  // At least one broken or expired (Red)
+}
+
 data class CalendarDay(
     val date: Date,
-    val dayName: String, // e.g., "Mon"
-    val dayNumber: String, // e.g., "22"
-    var isSelected: Boolean = false
+    val dayNumber: String,
+    var isSelected: Boolean = false,
+    var isToday: Boolean = false,
+    var status: DayStatus = DayStatus.NONE
 )

@@ -85,20 +85,39 @@ class MainActivity : AppCompatActivity() {
     private fun setupNavigation() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigation)
         bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_today -> replaceFragment(HomeFragment(), "Home")
-                R.id.nav_promises -> replaceFragment(PromisesFragment(), "Promises")
-                R.id.nav_history -> replaceFragment(HistoryFragment(), "History")
-                R.id.nav_stats -> replaceFragment(StatsFragment(), "Stats")
-                R.id.nav_profile -> replaceFragment(ProfileFragment(), "Profile")
+            val fragment = when (item.itemId) {
+                R.id.nav_home -> HomeFragment()
+                R.id.nav_promises -> PromisesFragment()
+                R.id.nav_history -> HistoryFragment()
+                R.id.nav_stats -> StatsFragment()
+                R.id.nav_profile -> ProfileFragment()
+                else -> null
             }
-            true
+            
+            val tag = when (item.itemId) {
+                R.id.nav_home -> "Home"
+                R.id.nav_promises -> "Promises"
+                R.id.nav_history -> "History"
+                R.id.nav_stats -> "Stats"
+                R.id.nav_profile -> "Profile"
+                else -> ""
+            }
+
+            if (fragment != null) {
+                replaceFragment(fragment, tag)
+                true
+            } else false
         }
     }
 
     private fun replaceFragment(fragment: Fragment, tag: String) {
+        // Prevent redundant replacements if the fragment is already visible
+        val current = supportFragmentManager.findFragmentByTag(tag)
+        if (current != null && current.isVisible) return
+
         supportFragmentManager.beginTransaction()
+            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
             .replace(R.id.nav_host_fragment, fragment, tag)
-            .commit()
+            .commitAllowingStateLoss() // Safer for UI-driven navigation
     }
 }

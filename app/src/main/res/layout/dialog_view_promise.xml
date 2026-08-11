@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_bottom_sheet">
+
+    <!-- Category Watermark Icon -->
+    <ImageView
+        android:id="@+id/ivCategoryWatermark"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:alpha="0.05"
+        android:rotation="-15"
+        android:src="@drawable/ic_study"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/text_dark" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <View
+                android:layout_width="40dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="24dp"
+                android:background="@color/light_gray" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Promise Details"
+                    android:textColor="@color/text_dark"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cvStatusBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+                    <TextView
+                        android:id="@+id/tvStatusBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="6dp"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        tools:text="KEPT"
+                        tools:textColor="@color/status_kept"
+                        tools:background="#E8F5E9" />
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Promise"
+                android:textColor="@color/text_gray"
+                android:textSize="12sp"
+                android:textAllCaps="true"
+                android:letterSpacing="0.1" />
+
+            <TextView
+                android:id="@+id/tvPromise"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/text_dark"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="I will read 20 pages of a book today." />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Category"
+                android:textColor="@color/text_gray"
+                android:textSize="12sp"
+                android:textAllCaps="true"
+                android:letterSpacing="0.1" />
+
+            <LinearLayout
+                android:id="@+id/layoutCategoryView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:background="@drawable/bg_badge_kept"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp">
+                <ImageView
+                    android:id="@+id/ivCategoryIcon"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_study"
+                    app:tint="@color/status_kept" />
+                <TextView
+                    android:id="@+id/tvCategoryName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/status_kept"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="Study" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/labelReminder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Reminder"
+                android:textColor="@color/text_gray"
+                android:textSize="12sp"
+                android:textAllCaps="true"
+                android:letterSpacing="0.1" />
+
+            <LinearLayout
+                android:id="@+id/layoutReminder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@android:drawable/ic_menu_recent_history"
+                    app:tint="@color/text_dark" />
+                <TextView
+                    android:id="@+id/tvReminderTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:textColor="@color/text_dark"
+                    android:textSize="14sp"
+                    tools:text="8:00 PM Today" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/labelNotes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Notes"
+                android:textColor="@color/text_gray"
+                android:textSize="12sp"
+                android:textAllCaps="true"
+                android:letterSpacing="0.1" />
+
+            <TextView
+                android:id="@+id/tvNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input_field"
+                android:padding="16dp"
+                android:textColor="@color/text_dark"
+                android:textSize="14sp"
+                tools:text="This is important because I want to build a reading habit." />
+
+            <LinearLayout
+                android:id="@+id/layoutBrokenReason"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="Reason for Failure"
+                    android:textColor="@color/accent_red"
+                    android:textSize="12sp"
+                    android:textAllCaps="true"
+                    android:letterSpacing="0.1" />
+
+                <TextView
+                    android:id="@+id/tvBrokenReason"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_badge_broken"
+                    android:padding="16dp"
+                    android:textColor="@color/status_broken"
+                    android:textSize="14sp"
+                    tools:text="I got too busy with work projects." />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnClose"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="48dp"
+                android:backgroundTint="@color/text_dark"
+                android:text="Back"
+                android:textAllCaps="false"
+                app:cornerRadius="12dp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

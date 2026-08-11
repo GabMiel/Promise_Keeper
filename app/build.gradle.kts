@@ -48,6 +48,9 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.constraintlayout)
 
+    // Shimmer
+    implementation(libs.shimmer)
+
     // Image Loading
     implementation(libs.coil)
 

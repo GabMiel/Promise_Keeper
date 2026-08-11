@@ -61,7 +61,6 @@ class HistoryAdapter(private val onItemClick: (HistoryItem.Day) -> Unit) :
             binding.tvBrokenCount.text = context.getString(R.string.stat_format_broken, day.broken)
             binding.tvPendingCount.text = context.getString(R.string.stat_format_pending, day.pending)
 
-            // Reflection Snippet handling
             if (!day.reflectionSnippet.isNullOrBlank()) {
                 binding.tvReflectionSnippet.visibility = View.VISIBLE
                 binding.tvReflectionSnippet.text = "Insight: ${day.reflectionSnippet}"
@@ -79,10 +78,14 @@ class HistoryAdapter(private val onItemClick: (HistoryItem.Day) -> Unit) :
                 isLast -> R.drawable.bg_history_item_bottom
                 else -> R.drawable.bg_history_item_middle
             }
-            binding.rootLayout.setBackgroundResource(backgroundRes)
-            binding.divider.visibility = if (isLast) View.GONE else View.VISIBLE
             
-            binding.root.setOnClickListener { onClick(day) }
+            // Apply the custom shape background
+            binding.rootLayout.setBackgroundResource(backgroundRes)
+            
+            // Set the listener on the rootLayout because it contains the selectable foreground
+            binding.rootLayout.setOnClickListener { onClick(day) }
+            
+            binding.divider.visibility = if (isLast) View.GONE else View.VISIBLE
         }
     }
 

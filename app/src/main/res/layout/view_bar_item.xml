@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="0dp"
     android:layout_height="match_parent"
@@ -7,12 +8,20 @@
     android:gravity="center_horizontal|bottom"
     android:orientation="vertical">
 
-    <View
-        android:id="@+id/viewBar"
-        android:layout_width="16dp"
-        android:layout_height="0dp"
-        android:background="@drawable/bg_bar_chart"
-        tools:layout_height="40dp" />
+    <FrameLayout
+        android:layout_width="24dp"
+        android:layout_height="100dp"
+        android:background="@drawable/bg_bar_track">
+
+        <View
+            android:id="@+id/viewBar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_bar_chart"
+            tools:layout_height="40dp" />
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/tvBarLabel"
