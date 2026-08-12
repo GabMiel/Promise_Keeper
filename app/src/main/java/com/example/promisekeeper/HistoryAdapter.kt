@@ -35,10 +35,7 @@ class HistoryAdapter(private val onItemClick: (HistoryItem.Day) -> Unit) :
         when (holder) {
             is HeaderViewHolder -> holder.bind(item as HistoryItem.Header)
             is DayViewHolder -> {
-                val dayItem = item as HistoryItem.Day
-                val isFirstInGroup = position == 0 || getItem(position - 1) is HistoryItem.Header
-                val isLastInGroup = position == itemCount - 1 || getItem(position + 1) is HistoryItem.Header
-                holder.bind(dayItem, isFirstInGroup, isLastInGroup)
+                holder.bind(item as HistoryItem.Day)
             }
         }
     }
@@ -53,7 +50,7 @@ class HistoryAdapter(private val onItemClick: (HistoryItem.Day) -> Unit) :
         private val binding: ItemHistoryDayBinding,
         private val onClick: (HistoryItem.Day) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(day: HistoryItem.Day, isFirst: Boolean, isLast: Boolean) {
+        fun bind(day: HistoryItem.Day) {
             val context = itemView.context
             binding.tvDate.text = day.date
             binding.tvPercentage.text = context.getString(R.string.percent_format, day.percentage)
@@ -72,20 +69,9 @@ class HistoryAdapter(private val onItemClick: (HistoryItem.Day) -> Unit) :
                 binding.tvReviewLink.setTextColor(ContextCompat.getColor(context, R.color.accent_red))
             }
 
-            val backgroundRes = when {
-                isFirst && isLast -> R.drawable.bg_input_field
-                isFirst -> R.drawable.bg_history_item_top
-                isLast -> R.drawable.bg_history_item_bottom
-                else -> R.drawable.bg_history_item_middle
-            }
-            
-            // Apply the custom shape background
-            binding.rootLayout.setBackgroundResource(backgroundRes)
-            
-            // Set the listener on the rootLayout because it contains the selectable foreground
+            // Ensure individual card styling
+            binding.rootLayout.background = null 
             binding.rootLayout.setOnClickListener { onClick(day) }
-            
-            binding.divider.visibility = if (isLast) View.GONE else View.VISIBLE
         }
     }
 

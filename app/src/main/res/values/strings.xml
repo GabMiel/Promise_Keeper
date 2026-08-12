@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Promise Keeper</string>
-    <string name="greeting_format">Good morning, %1$s!</string>
+    <string name="greeting_format">%1$s, %2$s!</string>
     <string name="subtitle_home">You\'ve got promises to keep.</string>
     <string name="today_summary">Today\'s Summary</string>
     <string name="summary_for_date">Summary for %1$s</string>
@@ -11,6 +11,8 @@
     <string name="add_promise">Add Promise</string>
     <string name="menu_desc">Menu</string>
     <string name="percent_format">%1$d%%</string>
+    <string name="week_range_format">%1$s - %2$s, %3$s</string>
+    <string name="number_format">%1$d</string>
 
     <!-- Navigation -->
     <string name="nav_home">Home</string>
@@ -25,6 +27,8 @@
     <string name="broken_promises_header">BROKEN PROMISES</string>
     <string name="pending_promises_header">PENDING PROMISES</string>
     <string name="count_suffix">%1$d promises</string>
+    <string name="count_suffix_single">1 promise</string>
+    <string name="count_suffix_plural">%1$d promises</string>
     <string name="view_all_kept">View all kept promises</string>
     <string name="view_all_broken">View all broken promises</string>
     <string name="view_all_pending">View all pending promises</string>
@@ -52,20 +56,109 @@
     <string name="category_personal">Personal</string>
 
     <!-- Profile & Settings -->
-    <string name="profile_total">Total</string>
-    <string name="profile_success">Success</string>
+    <string name="profile_total_promises">Total Promises</string>
+    <string name="profile_reliability">Reliability</string>
     <string name="profile_streak">Streak</string>
+    <string name="achievements">Achievements</string>
+    <string name="achievements_header">MILESTONES</string>
+    <string name="settings_title">Settings</string>
+    <string name="level_format">Level %1$d</string>
+    <string name="level_gaming_format">LV. %1$d</string>
+    <string name="xp_format">%1$d / %2$d XP</string>
+    <string name="multiplier_format">x%1$d Multiplier</string>
     <string name="reminders_section">Reminders</string>
     <string name="review_reminder_title">Daily Review Nudge</string>
     <string name="default_review_time">11:00 PM</string>
     <string name="account_section">Account</string>
+    <string name="general_section">General</string>
     <string name="settings_notifications">Notifications</string>
     <string name="settings_privacy">Privacy Policy</string>
     <string name="app_section">App</string>
+    <string name="sign_in">Sign In</string>
     <string name="sign_out">Sign Out</string>
     <string name="about_app">About Promise Keeper</string>
     <string name="sign_out_confirm">Are you sure you want to sign out?</string>
     <string name="cancel">Cancel</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="sync_section">In Sync</string>
+    <string name="settings_auto_backup">Auto Backup</string>
+    <string name="settings_sync_devices">Sync Across Devices</string>
+    <string name="help_section">Support</string>
+    <string name="settings_help_support">Help and Support</string>
+
+    <!-- Profile Sub Prompts Strings -->
+    <string name="default_motto">Action over words</string>
+    <string name="motto_hint">Tap to add a commitment motto...</string>
+    <string name="set_motto_title">Set Personal Motto</string>
+    <string name="motto_edit_hint">e.g. Action over words</string>
+    <string name="milestone_teaser_format">Keep %1$d more promises to reach Level %2$d!</string>
+    <string name="milestone_teaser_format_badge">%1$d more promises to unlock the %2$s milestone!</string>
+    <string name="achievement_empty_state">Start your first promise to earn milestones</string>
+    <string name="create_promise_shortcut">Create Promise</string>
+    <string name="badge_new">NEW</string>
+
+    <!-- Achievement Tooltips -->
+    <string name="achievement_status_unlocked">Status: Unlocked</string>
+    <string name="achievement_status_locked">Status: Locked</string>
+    <string name="achievement_how_to_earn">How to earn: %1$s</string>
+    <string name="dialog_got_it">Got it</string>
+
+    <!-- Achievement Category: Promise Legacy -->
+    <string name="achievement_legacy_title">Promise Milestones</string>
+
+    <string name="achievement_1_name">First Promise</string>
+    <string name="achievement_1_desc">You made your first commitment.</string>
+
+    <string name="achievement_5_name">Getting Started</string>
+    <string name="achievement_5_desc">You\'re beginning to build consistency.</string>
+
+    <string name="achievement_10_name">Keeping Your Word</string>
+    <string name="achievement_10_desc">You\'re starting to follow through.</string>
+
+    <string name="achievement_25_name">Building Trust</string>
+    <string name="achievement_25_desc">You\'re proving consistency to yourself.</string>
+
+    <string name="achievement_50_name">Staying True</string>
+    <string name="achievement_50_desc">You\'re becoming more reliable.</string>
+
+    <string name="achievement_100_name">Promise Keeper</string>
+    <string name="achievement_100_desc">You\'ve reached the core milestone.</string>
+
+    <string name="achievement_250_name">Strong Commitment</string>
+    <string name="achievement_250_desc">Keeping promises is becoming a habit.</string>
+
+    <string name="achievement_500_name">Reliable</string>
+    <string name="achievement_500_desc">You\'re consistently following through.</string>
+
+    <string name="achievement_1000_name">A Thousand Promises</string>
+    <string name="achievement_1000_desc">A major milestone worth recognizing.</string>
+
+    <string name="achievement_2000_name">Trusted Word</string>
+    <string name="achievement_2000_desc">Your consistency has become significant.</string>
+
+    <string name="achievement_3000_name">Unshaken</string>
+    <string name="achievement_3000_desc">You\'ve maintained your commitment over time.</string>
+
+    <string name="achievement_4000_name">Steadfast</string>
+    <string name="achievement_4000_desc">You keep going even when motivation drops.</string>
+
+    <string name="achievement_5000_name">True to Yourself</string>
+    <string name="achievement_5000_desc">A strong connection to the app\'s purpose.</string>
+
+    <string name="achievement_6000_name">Deeply Committed</string>
+    <string name="achievement_6000_desc">Long-term consistency.</string>
+
+    <string name="achievement_7000_name">Unwavering</string>
+    <string name="achievement_7000_desc">You rarely let yourself down.</string>
+
+    <string name="achievement_8000_name">Pillar of Trust</string>
+    <string name="achievement_8000_desc">Your consistency has become a foundation.</string>
+
+    <string name="achievement_9000_name">Master of Commitment</string>
+    <string name="achievement_9000_desc">You\'ve reached an exceptional level.</string>
+
+    <string name="achievement_10000_name">The Promise Keeper</string>
+    <string name="achievement_10000_desc">The ultimate achievement.</string>
 
     <!-- History -->
     <string name="history_title">History</string>
@@ -146,7 +239,7 @@
     <string name="update_status_subtitle">Mark your progress for today</string>
     <string name="kept_it">I kept it</string>
     <string name="broke_it">I broke it</string>
-    <string name="still_pending">Still pending</string>
+    <string name="still_pending">Still Pending</string>
     <string name="confirm">Confirm</string>
     <string name="reason_hint">Why was it broken? (Optional)</string>
     <string name="delete_promise">Delete Promise</string>

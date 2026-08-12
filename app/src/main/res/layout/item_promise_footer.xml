@@ -11,7 +11,7 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        app:cardBackgroundColor="@color/white"
+        app:cardBackgroundColor="@color/card_tan"
         app:cardCornerRadius="20dp"
         app:cardElevation="0dp"
         app:strokeColor="@color/light_gray"

@@ -16,7 +16,11 @@ data class WeeklyStats(
     val brokenCount: Int,
     val totalCount: Int,
     val allTimeTotal: Int,
+    val allTimeKeptCount: Int,
+    val allTimeBrokenCount: Int,
     val allTimeSuccessPercentage: Int,
+    val totalXp: Int,
+    val currentMultiplier: Int,
     val dailyProgress: List<Float>,
     val currentStreak: Int,
     val longestStreak: Int,
@@ -118,7 +122,48 @@ class StatsViewModel : ViewModel() {
 
         val allTimeTotalCount = all.size
         val allTimeKeptCount = all.count { it.status == PromiseStatus.KEPT }
+        val allTimeBrokenCount = all.count { it.status == PromiseStatus.BROKEN }
         val allTimeSuccessPercent = if (allTimeTotalCount > 0) (allTimeKeptCount * 100) / allTimeTotalCount else 0
+        
+        val sortedDates = all.groupBy {
+            val c = Calendar.getInstance()
+            c.timeInMillis = it.timestamp
+            c.set(Calendar.HOUR_OF_DAY, 0)
+            c.set(Calendar.MINUTE, 0)
+            c.set(Calendar.SECOND, 0)
+            c.set(Calendar.MILLISECOND, 0)
+            c.timeInMillis
+        }.toSortedMap()
+
+        // Forgiving Streak & Multiplier XP Logic
+        var totalXp = 0
+        var currentStreak = 0
+        var longestStreak = 0
+        var lastDate: Long? = null
+        var currentMultiplier = 1
+
+        sortedDates.forEach { (date, dayPromises) ->
+            // Streak only breaks if a day is skipped (gap in sortedDates)
+            val last = lastDate
+            if (last == null || date == last + 86400000L) {
+                currentStreak++
+            } else {
+                currentStreak = 1 // Streak reset because a day was missed
+            }
+            
+            if (currentStreak > longestStreak) longestStreak = currentStreak
+            
+            // Multiplier increases every 7 days (x2, x3, etc.)
+            currentMultiplier = (currentStreak / 7) + 1
+            
+            val keptInDay = dayPromises.count { it.status == PromiseStatus.KEPT }
+            val brokenInDay = dayPromises.count { it.status == PromiseStatus.BROKEN }
+            
+            totalXp += (keptInDay * 10 * currentMultiplier)
+            totalXp += (brokenInDay * 5) // Reward for honesty
+            
+            lastDate = date
+        }
 
         val dailyProgress = MutableList(7) { 0f }
         val dailyTotals = IntArray(7) { 0 }
@@ -140,37 +185,6 @@ class StatsViewModel : ViewModel() {
             if (dailyTotals[i] > 0) dailyProgress[i] = dailyKept[i].toFloat() / dailyTotals[i].toFloat()
         }
 
-        val sortedDates = all.groupBy {
-            val c = Calendar.getInstance()
-            c.timeInMillis = it.timestamp
-            c.set(Calendar.HOUR_OF_DAY, 0)
-            c.set(Calendar.MINUTE, 0)
-            c.set(Calendar.SECOND, 0)
-            c.set(Calendar.MILLISECOND, 0)
-            c.timeInMillis
-        }.toSortedMap()
-
-        var longest = 0
-        var current = 0
-        var lastDate: Long? = null
-        
-        sortedDates.forEach { (date, dayPromises) ->
-            val hasKept = dayPromises.any { it.status == PromiseStatus.KEPT }
-            val hasBroken = dayPromises.any { it.status == PromiseStatus.BROKEN }
-            
-            if (hasKept && !hasBroken) {
-                if (lastDate == null || date == lastDate + 86400000L) {
-                    current++
-                } else {
-                    current = 1
-                }
-                if (current > longest) longest = current
-            } else if (hasBroken) {
-                current = 0
-            }
-            lastDate = date
-        }
-
         val allBroken = all.filter { it.status == PromiseStatus.BROKEN && it.failureTag != null }
         val reasonCounts = allBroken.groupingBy { it.failureTag!! }.eachCount()
         val mostCommon = reasonCounts.maxByOrNull { it.value }
@@ -184,10 +198,14 @@ class StatsViewModel : ViewModel() {
             brokenCount = broken,
             totalCount = total,
             allTimeTotal = allTimeTotalCount,
+            allTimeKeptCount = allTimeKeptCount,
+            allTimeBrokenCount = allTimeBrokenCount,
             allTimeSuccessPercentage = allTimeSuccessPercent,
+            totalXp = totalXp,
+            currentMultiplier = currentMultiplier,
             dailyProgress = dailyProgress,
-            currentStreak = current,
-            longestStreak = longest,
+            currentStreak = currentStreak,
+            longestStreak = longestStreak,
             commonReason = mostCommon?.key,
             commonReasonCount = mostCommon?.value ?: 0,
             insightMessage = insight

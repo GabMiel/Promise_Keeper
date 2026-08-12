@@ -45,6 +45,7 @@
                     android:id="@+id/cvCategoryTag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/card_tan"
                     app:cardCornerRadius="8dp"
                     app:cardElevation="0dp"
                     app:strokeWidth="0dp"
@@ -279,7 +280,7 @@
                     android:id="@+id/btnConfirmKept"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:backgroundTint="@color/status_kept"
+                    app:backgroundTint="@color/status_kept"
                     android:text="@string/confirm"
                     app:cornerRadius="12dp" />
             </LinearLayout>
@@ -297,7 +298,7 @@
                     android:id="@+id/btnConfirmPending"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:backgroundTint="@color/status_pending"
+                    app:backgroundTint="@color/status_pending"
                     android:text="@string/confirm"
                     app:cornerRadius="12dp" />
             </LinearLayout>
@@ -423,7 +424,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:layout_marginTop="24dp"
-                    android:backgroundTint="@color/status_broken"
+                    app:backgroundTint="@color/status_broken"
                     android:text="@string/confirm"
                     app:cornerRadius="12dp" />
             </LinearLayout>

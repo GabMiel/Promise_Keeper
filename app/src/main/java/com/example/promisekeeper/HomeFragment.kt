@@ -29,7 +29,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ListenerRegistration
@@ -49,7 +48,6 @@ import kotlin.math.roundToInt
 class HomeFragment : Fragment() {
     private lateinit var adapter: PromiseAdapter
     private lateinit var calendarAdapter: CalendarAdapter
-    private val reviewRepository = ReviewRepository()
     private val allPromises = mutableListOf<Promise>()
     private val db = Firebase.firestore
     private val auth = FirebaseAuth.getInstance()
@@ -63,8 +61,6 @@ class HomeFragment : Fragment() {
         set(Calendar.MILLISECOND, 0)
     }
 
-    private var cardPendingReview: MaterialCardView? = null
-    private var tvPendingReviewText: TextView? = null
     private var snapshotListener: ListenerRegistration? = null
     private var emptyStateContainer: View? = null
     private var shimmerContainer: ShimmerFrameLayout? = null
@@ -78,7 +74,7 @@ class HomeFragment : Fragment() {
 
     private val dateChangedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action == Intent.ACTION_DATE_CHANGED || intent?.action == Intent.ACTION_TIME_CHANGED) {
+            if (intent?.action == Intent.ACTION_DATE_CHANGED || intent?.action == Intent.ACTION_TIMEZONE_CHANGED) {
                 refreshLiveUI()
             }
         }
@@ -93,39 +89,33 @@ class HomeFragment : Fragment() {
         
         mainContent = view.findViewById(R.id.mainContent)
         rvPromises = view.findViewById(R.id.rvPromises)
-        cardPendingReview = view.findViewById(R.id.cardPendingReview)
-        tvPendingReviewText = view.findViewById(R.id.tvPendingReviewText)
         emptyStateContainer = view.findViewById(R.id.emptyStateContainer)
         shimmerContainer = view.findViewById(R.id.shimmerContainer)
         tvSummaryTitle = view.findViewById(R.id.tvSummaryTitle)
         
         setupGreeting(view)
         setupCalendar(view)
-        setupRecyclerView(view)
+        setupRecyclerView()
         setupButtons(view)
-        setupSwipeGestures(view)
+        setupSwipeGestures()
         
         if (isFirstLoad) {
             shimmerContainer?.visibility = View.VISIBLE
             shimmerContainer?.startShimmer()
             rvPromises?.visibility = View.GONE
-        } else {
-            shimmerContainer?.visibility = View.GONE
-            shimmerContainer?.stopShimmer()
-            rvPromises?.visibility = View.VISIBLE
         }
         
         observePromises(view)
 
         val filter = IntentFilter().apply {
             addAction(Intent.ACTION_DATE_CHANGED)
-            addAction(Intent.ACTION_TIME_TICK)
+            addAction(Intent.ACTION_TIMEZONE_CHANGED)
         }
         requireContext().registerReceiver(dateChangedReceiver, filter)
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun setupSwipeGestures(view: View) {
+    private fun setupSwipeGestures() {
         val gestureDetector = GestureDetector(requireContext(), object : GestureDetector.SimpleOnGestureListener() {
             private val SWIPE_THRESHOLD = 100
             private val SWIPE_VELOCITY_THRESHOLD = 100
@@ -137,9 +127,9 @@ class HomeFragment : Fragment() {
                 if (abs(diffX) > abs(diffY)) {
                     if (abs(diffX) > SWIPE_THRESHOLD && abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                         if (diffX > 0) {
-                            view.findViewById<View>(R.id.ivPrevWeek).performClick()
+                            view?.findViewById<View>(R.id.ivPrevWeek)?.performClick()
                         } else {
-                            view.findViewById<View>(R.id.ivNextWeek).performClick()
+                            view?.findViewById<View>(R.id.ivNextWeek)?.performClick()
                         }
                         return true
                     }
@@ -148,7 +138,7 @@ class HomeFragment : Fragment() {
             }
         })
 
-        view.findViewById<View>(R.id.mainContent).setOnTouchListener { v, event ->
+        mainContent?.setOnTouchListener { v, event ->
             if (gestureDetector.onTouchEvent(event)) return@setOnTouchListener true
             if (event.action == MotionEvent.ACTION_UP) {
                 v.performClick()
@@ -176,7 +166,7 @@ class HomeFragment : Fragment() {
             else -> "Good evening"
         }
         
-        tvGreeting.text = "$greeting, $name!"
+        tvGreeting.text = getString(R.string.greeting_format, greeting, name)
     }
 
     private fun setupCalendar(view: View) {
@@ -190,11 +180,10 @@ class HomeFragment : Fragment() {
                 selectedDate = selectedDay.date
                 updateCalendarGrid(view)
                 
-                // Debounce the update to prevent rapid switching crashes
                 updateJob?.cancel()
                 updateJob = lifecycleScope.launch {
-                    delay(50) // Tiny delay to catch rapid clicks
-                    if (isAdded && view != null) {
+                    delay(50) 
+                    if (isAdded) {
                         filterPromisesAndUpdateStats(view)
                     }
                 }
@@ -246,7 +235,10 @@ class HomeFragment : Fragment() {
         
         val sdfMonth = SimpleDateFormat("MMM d", Locale.getDefault())
         val sdfYear = SimpleDateFormat("yyyy", Locale.getDefault())
-        tvCurrentWeek?.text = "${sdfMonth.format(currentWeekStart.time)} - ${sdfMonth.format(weekEnd.time)}, ${sdfYear.format(weekEnd.time)}"
+        tvCurrentWeek?.text = getString(R.string.week_range_format, 
+            sdfMonth.format(currentWeekStart.time), 
+            sdfMonth.format(weekEnd.time), 
+            sdfYear.format(weekEnd.time))
 
         val calendar = currentWeekStart.clone() as Calendar
         val newList = mutableListOf<CalendarDay>()
@@ -259,7 +251,7 @@ class HomeFragment : Fragment() {
         }
         val startOfToday = today.timeInMillis
 
-        for (i in 0 until 7) {
+        for (_i in 0 until 7) {
             val date = calendar.time
             val dayStart = calendar.timeInMillis
             val dayEnd = dayStart + 86400000
@@ -300,7 +292,7 @@ class HomeFragment : Fragment() {
                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
     }
 
-    private fun setupRecyclerView(view: View) {
+    private fun setupRecyclerView() {
         adapter = PromiseAdapter(
             onPromiseClick = { promise, _ ->
                 PromiseEntryBottomSheet.newInstance(promise.id).show(childFragmentManager, "PromiseEntry")
@@ -347,7 +339,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun checkAutoExpirationAndPendingReviews() {
+    private fun checkAutoExpiration() {
         val userId = auth.currentUser?.uid ?: return
         val startOfToday = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 0)
@@ -359,7 +351,7 @@ class HomeFragment : Fragment() {
         db.collection("users").document(userId).collection("promises")
             .get()
             .addOnSuccessListener { snapshot ->
-                if (!snapshot.isEmpty) {
+                if (snapshot != null && !snapshot.isEmpty) {
                     val batch = db.batch()
                     var hasUpdates = false
                     snapshot.documents.forEach { doc ->
@@ -371,50 +363,10 @@ class HomeFragment : Fragment() {
                         }
                     }
                     if (hasUpdates) {
-                        batch.commit().addOnSuccessListener {
-                            detectUnreviewedDays()
-                        }
-                    } else {
-                        detectUnreviewedDays()
+                        batch.commit()
                     }
-                } else {
-                    detectUnreviewedDays()
                 }
             }
-    }
-
-    private fun detectUnreviewedDays() {
-        lifecycleScope.launch {
-            val unreviewedDays = reviewRepository.getUnreviewedDays()
-            if (unreviewedDays.isNotEmpty()) {
-                if (!isAdded || view == null) return@launch
-                mainContent?.let { TransitionManager.beginDelayedTransition(it, AutoTransition().apply { excludeTarget(rvPromises!!, true) }) }
-                cardPendingReview?.visibility = View.VISIBLE
-                
-                val count = unreviewedDays.size
-                tvPendingReviewText?.text = if (count == 1) {
-                    getString(R.string.pending_review_msg)
-                } else {
-                    getString(R.string.pending_review_multi_msg, count)
-                }
-                
-                cardPendingReview?.setOnClickListener {
-                    val reviewFragment = DayReviewFragment.newInstance(unreviewedDays.first())
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.nav_host_fragment, reviewFragment)
-                        .addToBackStack(null)
-                        .commit()
-                }
-
-                delay(5000)
-                if (isAdded && view != null) {
-                    mainContent?.let { TransitionManager.beginDelayedTransition(it) }
-                    cardPendingReview?.visibility = View.GONE
-                }
-            } else {
-                cardPendingReview?.visibility = View.GONE
-            }
-        }
     }
 
     private fun observePromises(view: View) {
@@ -436,7 +388,7 @@ class HomeFragment : Fragment() {
                     rvPromises?.visibility = View.VISIBLE
                     isFirstLoad = false
                     
-                    checkAutoExpirationAndPendingReviews()
+                    checkAutoExpiration()
                     updateCalendarGrid(view)
                     filterPromisesAndUpdateStats(view)
                 }
@@ -507,9 +459,9 @@ class HomeFragment : Fragment() {
                 pbSummary.progress = currentProgress
                 tvProgressPercent.text = getString(R.string.percent_format, currentProgress)
                 
-                tvKeptCount.text = (startKept + (kept - startKept) * fraction).toInt().toString()
-                tvBrokenCount.text = (startBroken + (broken - startBroken) * fraction).toInt().toString()
-                tvPendingCount.text = (startPending + (pending - startPending) * fraction).toInt().toString()
+                tvKeptCount.text = getString(R.string.number_format, (startKept + (kept - startKept) * fraction).toInt())
+                tvBrokenCount.text = getString(R.string.number_format, (startBroken + (broken - startBroken) * fraction).toInt())
+                tvPendingCount.text = getString(R.string.number_format, (startPending + (pending - startPending) * fraction).toInt())
             }
             start()
         }
@@ -533,11 +485,9 @@ class HomeFragment : Fragment() {
         progressAnimator?.cancel()
         try {
             requireContext().unregisterReceiver(dateChangedReceiver)
-        } catch (e: Exception) {}
+        } catch (_e: Exception) {}
         snapshotListener?.remove()
         snapshotListener = null
-        cardPendingReview = null
-        tvPendingReviewText = null
         emptyStateContainer = null
         shimmerContainer = null
         tvSummaryTitle = null

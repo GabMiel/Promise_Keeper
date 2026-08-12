@@ -2,16 +2,23 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="bg_soft">#FFFBF9</color>
+    <color name="bg_soft">#F8F1E7</color>
+    <color name="card_tan">#EFE5D5</color>
+    <color name="nav_tan_gray">#E5DED2</color>
+    <color name="nav_active_indicator">#BCB2A4</color> <!-- Much darker tan for selection -->
     <color name="accent_red">#F27878</color>
     <color name="accent_red_light">#FFEAEA</color>
     <color name="text_dark">#333333</color>
     <color name="text_gray">#757575</color>
-    <color name="status_kept">#4CAF50</color>
-    <color name="status_kept_light">#E8F5E9</color>
-    <color name="status_broken">#E57373</color>
-    <color name="status_broken_light">#FFEBEE</color>
-    <color name="status_pending">#FFB74D</color>
-    <color name="status_pending_light">#FFF3E0</color>
-    <color name="light_gray">#EEEEEE</color>
+
+    <!-- Updated Status Colors for better Tan Contrast -->
+    <color name="status_kept">#388E3C</color>
+    <color name="status_kept_light">#DcedC8</color>
+    <color name="status_broken">#D32F2F</color>
+    <color name="status_broken_light">#FFCDD2</color>
+    <color name="status_pending">#F57C00</color>
+    <color name="status_pending_light">#FFE0B2</color>
+
+    <color name="light_gray">#D7CCC8</color>
+    <color name="background_gray">#F5F5F5</color>
 </resources>

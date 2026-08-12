@@ -141,7 +141,7 @@ class AddPromiseFragment : Fragment() {
         val activeColor = ContextCompat.getColor(requireContext(), R.color.accent_red)
         val inactiveColor = ContextCompat.getColor(requireContext(), R.color.text_gray)
         val activeBg = ContextCompat.getColor(requireContext(), R.color.accent_red_light)
-        val inactiveBg = ContextCompat.getColor(requireContext(), R.color.white)
+        val inactiveBg = ContextCompat.getColor(requireContext(), R.color.card_tan)
 
         categories.forEach { (name, id) ->
             val layout = view.findViewById<LinearLayout>(id)
@@ -179,8 +179,14 @@ class AddPromiseFragment : Fragment() {
         
         switchRemind.setOnCheckedChangeListener { _, isChecked ->
             updateReminderUI(view, isChecked)
-            if (isChecked && reminderTime == null) {
-                showTimePickerDialog(view)
+            if (isChecked) {
+                // Automatically enable global notifications if a reminder is set
+                val sharedPrefs = requireContext().getSharedPreferences("settings", Context.MODE_PRIVATE)
+                sharedPrefs.edit().putBoolean("notifications_enabled", true).apply()
+                
+                if (reminderTime == null) {
+                    showTimePickerDialog(view)
+                }
             }
         }
     }
@@ -223,11 +229,6 @@ class AddPromiseFragment : Fragment() {
             return
         }
 
-        if (selectedCategory == null) {
-            Toast.makeText(requireContext(), "Please select a category", Toast.LENGTH_SHORT).show()
-            return
-        }
-
         setLoading(view, true)
 
         val finalReminderTime = if (isReminderOn) (reminderTime ?: "8:00 PM") else null
@@ -238,7 +239,7 @@ class AddPromiseFragment : Fragment() {
             id = id,
             userId = userId,
             description = description,
-            category = selectedCategory!!,
+            category = selectedCategory ?: "Other",
             reminderTime = finalReminderTime,
             notes = notes
         )

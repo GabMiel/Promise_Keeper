@@ -137,7 +137,7 @@ class EditPromiseBottomSheet : BottomSheetDialogFragment() {
         val activeColor = ContextCompat.getColor(requireContext(), R.color.accent_red)
         val inactiveColor = ContextCompat.getColor(requireContext(), R.color.text_gray)
         val activeBg = ContextCompat.getColor(requireContext(), R.color.accent_red_light)
-        val inactiveBg = ContextCompat.getColor(requireContext(), R.color.white)
+        val inactiveBg = ContextCompat.getColor(requireContext(), R.color.card_tan)
 
         categories.forEach { (name, id) ->
             val layout = view.findViewById<LinearLayout>(id)
@@ -195,11 +195,6 @@ class EditPromiseBottomSheet : BottomSheetDialogFragment() {
             return
         }
 
-        if (selectedCategory == null) {
-            Toast.makeText(requireContext(), "Please select a category", Toast.LENGTH_SHORT).show()
-            return
-        }
-
         val userId = auth.currentUser?.uid ?: return
         val id = promiseId ?: return
         
@@ -210,10 +205,11 @@ class EditPromiseBottomSheet : BottomSheetDialogFragment() {
         btnSave.isEnabled = false
 
         val finalReminderTime = if (isReminderOn) (reminderTime ?: "8:00 PM") else null
+        val categoryToSave = selectedCategory ?: "Other"
         
         val updates = mutableMapOf<String, Any?>(
             "description" to description,
-            "category" to selectedCategory,
+            "category" to categoryToSave,
             "reminderTime" to finalReminderTime,
             "notes" to notes
         )
@@ -224,7 +220,7 @@ class EditPromiseBottomSheet : BottomSheetDialogFragment() {
                 if (isAdded) {
                     val updatedPromise = currentPromise?.copy(
                         description = description,
-                        category = selectedCategory!!,
+                        category = categoryToSave,
                         reminderTime = finalReminderTime,
                         notes = notes
                     )

@@ -62,8 +62,8 @@ class CalendarAdapter(
                 holder.viewTodayIndicator.setBackgroundResource(R.drawable.dot_indicator)
             }
             else -> {
-                // Neutral State: No promises or mixed pending
-                holder.rootCard.setCardBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
+                // Neutral State: Use the dark tan color to contrast with light tan background
+                holder.rootCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.card_tan))
                 holder.rootCard.strokeColor = ContextCompat.getColor(context, R.color.light_gray)
                 holder.rootCard.strokeWidth = dpToPx(1, context)
                 holder.tvDayNumber.setTextColor(ContextCompat.getColor(context, R.color.text_dark))
@@ -89,7 +89,6 @@ class CalendarAdapter(
 
     class CalendarDiffCallback : DiffUtil.ItemCallback<CalendarDay>() {
         override fun areItemsTheSame(oldItem: CalendarDay, newItem: CalendarDay): Boolean {
-            // Compare date and status to ensure colors update correctly without full reload flicker
             return oldItem.date == newItem.date
         }
 

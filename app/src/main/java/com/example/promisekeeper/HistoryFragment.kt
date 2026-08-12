@@ -152,7 +152,8 @@ class HistoryFragment : Fragment() {
                 chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 chip.chipStrokeWidth = 0f
             } else {
-                chip.chipBackgroundColor = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
+                // Set unselected chip background to card_tan for consistent look
+                chip.chipBackgroundColor = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.card_tan))
                 chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_gray))
                 chip.chipStrokeColor = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.light_gray))
                 chip.chipStrokeWidth = 1f * resources.displayMetrics.density
@@ -259,7 +260,7 @@ class HistoryFragment : Fragment() {
                 binding.ivEmptyState.setImageResource(android.R.drawable.ic_menu_search)
                 binding.tvEmptyState.text = getString(R.string.no_search_history_results, searchQuery)
             } else {
-                binding.ivEmptyState.setImageResource(R.drawable.ic_diamond) // Or appropriate empty history icon
+                binding.ivEmptyState.setImageResource(R.drawable.ic_diamond)
                 binding.tvEmptyState.text = getString(R.string.no_history_found)
             }
         }

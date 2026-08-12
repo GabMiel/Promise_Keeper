@@ -222,7 +222,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="48dp"
-                android:backgroundTint="@color/text_dark"
+                android:backgroundTint="@color/accent_red"
                 android:text="Back"
                 android:textAllCaps="false"
                 app:cornerRadius="12dp" />
